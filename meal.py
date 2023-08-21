@@ -2,6 +2,7 @@ def main():
     inp = input("What time is it? ")
     inp = inp.strip()
     inp_time = convert(inp)
+    #print(inp_time)
     if inp_time >= 7.00 and inp_time <=8.00:
         print("breakfast time")
     elif inp_time >= 12.00 and inp_time <= 13.00:
@@ -12,8 +13,10 @@ def main():
 
 
 def convert(time):
-    timef = float(time.replace(":","."))
-    return timef
+    timef = time.split(":")
+    h = int(timef[0])
+    m = int(timef[1])/60
+    return float(h+m)
 
 
 if __name__ == "__main__":
