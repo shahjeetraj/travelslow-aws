@@ -7,7 +7,7 @@ def main():
         print("breakfast time")
     elif inp_time >= 12.00 and inp_time <= 13.00:
         print("lunch time")
-    elif inp_time >= 18.00 and inp_time <= 13.00:
+    elif inp_time >= 18.00 and inp_time <= 19.00:
         print("dinner time")
     else: print("",end="")
 
