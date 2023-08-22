@@ -8,7 +8,7 @@ def main():
 def twttrze(t):
     new_text = ''
     for i in range(len(t)):
-        if t[i] not in ['a','e','i','o','u']:
+        if t[i].lower() not in ['a','e','i','o','u']:
             new_text += t[i]
         else:
             pass
