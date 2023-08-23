@@ -10,7 +10,7 @@ def main():
 
 def is_valid(s):
 
-    return re.search(r"[a-z]{2}[a-z1-9]*",s,re.IGNORECASE)
+    return re.search(r"[A-Z]{2}[A-Z1-9]*\W$",s)
 
 
 main()
