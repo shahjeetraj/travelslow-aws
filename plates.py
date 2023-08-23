@@ -15,9 +15,9 @@ def is_valid(s):
                 return False
             else:
                 for i in range(2,len(s)-1):
-                    if s[i].isnumeric():
+                    if int(s[i]).isnumeric():
                         #print(s[i])
-                        if s[i+1].isalpha():
+                        if str(s[i+1]).isalpha():
                             return False
 
                     else:
