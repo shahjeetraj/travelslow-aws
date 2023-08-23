@@ -10,7 +10,8 @@ def main():
 
 def is_valid(s):
 
-    return re.search(r"[A-Z]{2}[A-Z1-9]*\W$",s)
+    return re.match(r"^(?=[A-Za-z]{2,6}$)(?!.*[0-9]{2})(?!.*[. ])[A-Za-z0-9]*[1-9]?[A-Za-z]*$"
+,s)
 
 
 main()
