@@ -9,8 +9,23 @@ def main():
 
 
 def is_valid(s):
+    while re.match("[A-Z0-9]{2,6}$",s):
+        if s[0].isalpha() and s[1].isalpha():
+            if int(s[2]) == 0:
+                return False
+            else:
+                for i in range(2,len(s)-1):
+                    if s[i].isnumeric():
+                        #print(s[i])
+                        if s[i+1].isalpha():
+                            return False
 
-    return re.match("^[A-Z]{2}(^(?:(?=[A-Z0-9]{2,4}$)(?![A-Z]*[0-9][A-Z]*$)|[A-Z0-9]{2,4})$)",s)
+                    else:
+                        pass
+                return True
+        else:
+            return False
+    #return re.match("^[A-Z]{2}((([A-Z1-9]{1})([A-Z0-9]{1,3}$)(?!(?:[A-Z]*[0-9]){2,}))|[A-Z0-9]{1,4})$",s)
 
 
 main()
