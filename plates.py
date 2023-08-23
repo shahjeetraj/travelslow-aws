@@ -10,8 +10,7 @@ def main():
 
 def is_valid(s):
 
-    return re.match(r"^(?=[A-Za-z]{2,6}$)(?!.*[0-9]{2})(?!.*[. ])[A-Za-z0-9]*[1-9]?[A-Za-z]*$"
-,s)
+    return re.match("^[A-Z]{2}(^(?:(?=[A-Z0-9]{2,4}$)(?![A-Z]*[0-9][A-Z]*$)|[A-Z0-9]{2,4})$)",s)
 
 
 main()
