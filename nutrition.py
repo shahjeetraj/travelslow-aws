@@ -1,6 +1,9 @@
 def main():
     item = input("Item: ").title()
-    print(f"Calories: {get_cal(item)}")
+    if get_cal(item) == None:
+        print("",end="")
+    else:
+        print(f"Calories: {get_cal(item)}")
 
 cal_count = {
     "Apple" : 130,
