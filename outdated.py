@@ -40,7 +40,7 @@ def validity(inp):
     # CHECK IF THE MONTH IS WITHIN LIST OR IS LESS THAN 13
     # CHECK IF THE DAY IS LESS THAN 31
     # CHECK IF YEAR IS 4 DIGITS
-    if re.match("[0-1]?[1-2]/[0-3]?[0-9]/[0-9]{4}$",inp):
+    if re.match("[0-1]?[1-9]/[0-3]?[0-9]/[0-9]{4}$",inp):
         t_dt = inp.split("/")
         if int(t_dt[1]) > 31 or int(t_dt[1]) < 1:
             #print("failed")
@@ -60,7 +60,10 @@ def validity(inp):
                 if new_inp[0] not in months:
                     main()
                 else:
-                     return True
+                     if int(new_inp[1]) > 31 or int(new_inp[1]) < 1:
+                        main()
+                     else:
+                         return True
             else:
                 pass
 
@@ -70,7 +73,7 @@ def validity(inp):
 
 def out_date(inp):
     # use the above regex to provide new values
-    if re.match("[0-1]?[1-2]/?[0-3]?[0-9]/[0-9]{4}$",inp):
+    if re.match("[0-1]?[1-9]/[0-3]?[0-9]/[0-9]{4}$",inp):
         #print("part1.1")
         t_dt = inp.split("/")
         if len(t_dt[1]) == 1:
