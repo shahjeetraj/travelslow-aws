@@ -80,7 +80,7 @@ def out_date(inp):
             t_dt[1] = "0"+t_dt[1]
         if len(t_dt[0]) == 1:
             t_dt[0] = "0"+t_dt[0]
-        out = str(t_dt[2]+"/"+t_dt[0]+"/"+t_dt[1])
+        out = str(t_dt[2]+"-"+t_dt[0]+"-"+t_dt[1])
         return out
     else:
         #print("part2.1")
@@ -91,7 +91,7 @@ def out_date(inp):
         new_inp[0] = months_dict[new_inp[0]]
         if len(new_inp[1]) == 1:
             new_inp[1] = "0"+new_inp[1]
-        out = str(new_inp[2]+"/"+new_inp[0]+"/"+new_inp[1])
+        out = str(new_inp[2]+"-"+new_inp[0]+"-"+new_inp[1])
         return out
 
 if __name__ == "__main__":
