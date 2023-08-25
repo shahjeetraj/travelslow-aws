@@ -33,7 +33,7 @@ months_dict = months = {
 def main():
     inp_date = input("Date: ").strip()
     if validity(inp_date):
-        print(out_date(inp_date))
+        print(out_date(inp_date),end="")
 
 def validity(inp):
     # MAKE SEPERATORS SIMILAR IF NOT
@@ -48,7 +48,7 @@ def validity(inp):
         else:
             #print("part1")
             return True
-    elif "," in inp or " " in inp:
+    elif "," in inp:
         for month in months:
             if month in inp.title():
 
