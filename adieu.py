@@ -9,7 +9,7 @@ def main():
 
         except EOFError:
             take_input = False
-            print(len(family))
+            #print(len(family))
             # CREATE OUTPUT STRING
             out=''
             if len(family) > 2:
