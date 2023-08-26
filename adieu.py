@@ -22,6 +22,6 @@ def main():
                 out = family[0]
 
             # PROVIDE OUTPUT
-            print(f"Adiue, adieu, to {out}")
+            print(f"\nAdiue, adieu, to {out}")
 
 main()
