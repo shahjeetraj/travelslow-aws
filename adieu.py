@@ -13,9 +13,9 @@ def main():
             # CREATE OUTPUT STRING
             out=''
             if len(family) > 2:
-                for i in range(len(family)-2):
+                for i in range(len(family)-1):
                     out = "".join(out+family[i]+", ")
-                out = ''.join(out+family[-2]+" and "+ family[-1])
+                out = ''.join(out+"and "+family[-1])
             elif len(family) == 2:
                 out = "".join(family[0]+" and "+family[1])
             else:
@@ -23,6 +23,6 @@ def main():
 
             # PROVIDE OUTPUT
             print()
-            print(f"Adiue, adieu, to {out}")
+            print(f"Adieu, adieu, to {out}")
 
 main()
