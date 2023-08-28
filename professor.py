@@ -14,13 +14,15 @@ def main():
                 try:
                     if int(ans) != qa_list[1]:
                         wrong_a[q] += 1
+                        print("EEE")
                     else:
                         score += 1
                         break
                 except ValueError:
                     wrong_a[q] += 1
+                    print("EEE")
             else:
-                print(f"{qa_list[0]} = {qa_list[1]}\nEEE")
+                print(f"{qa_list[0]} = {qa_list[1]}")
         return(score)
 
 
