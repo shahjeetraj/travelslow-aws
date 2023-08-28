@@ -37,17 +37,17 @@ def get_level():
 
 def generate_q(l):
     if l == 1:
-        question = "".join(str(random.randint(0,10))+" + "+str(random.randint(0,10)))
+        question = "".join(str(random.randint(0,9))+" + "+str(random.randint(0,9)))
         broken = question.split(" + ")
         answer = int(broken[0]) + int(broken[1])
         return [question,answer]
     elif l ==2:
-        question = "".join(str(random.randint(10,100))+" + "+str(random.randint(10,100)))
+        question = "".join(str(random.randint(10,99))+" + "+str(random.randint(10,99)))
         broken = question.split(" + ")
         answer = int(broken[0]) + int(broken[1])
         return [question,answer]
     else:
-        question = "".join(str(random.randint(100,1000))+" + "+str(random.randint(100,1000)))
+        question = "".join(str(random.randint(100,999))+" + "+str(random.randint(100,999)))
         broken = question.split(" + ")
         answer = int(broken[0]) + int(broken[1])
         return [question,answer]
