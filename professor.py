@@ -54,4 +54,4 @@ def generate_q(l):
 
 if __name__ == "__main__":
     s=main()
-    print(f"Score: {s}")
+    print(f"Score: {str(s)}")
