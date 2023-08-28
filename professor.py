@@ -54,4 +54,4 @@ def generate_q(l):
 
 if __name__ == "__main__":
     s=main()
-    print(f"{str(s)}")
+    print(f"{s}")
