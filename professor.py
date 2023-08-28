@@ -20,7 +20,7 @@ def main():
                 except ValueError:
                     wrong_a[q] += 1
             else:
-                print("EEE")
+                print(f"{qa_list[0]} = {qa_list[1]}\nEEE")
         return(score)
 
 
