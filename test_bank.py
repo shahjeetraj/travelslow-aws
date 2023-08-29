@@ -1,12 +1,22 @@
 from bank import value
 
+def main():
+    test_bank_for_100()
+    test_for_20()
+    test_for_0()
+    #test_int()
+    #test_punct()
+    #test_100()
+    #test_20()
+    #test_0()
+
 def test_bank_for_100():
     assert value("Whats up?") == 100
     assert value("What's up") == 100
 
 def test_for_20():
-    assert value("Hey, there") == 20
-    assert value("hey") == 20
+    assert value("Hey") == 20
+    assert value("Hi") == 20
     assert value("HEY") == 20
 
 def test_for_0():
@@ -33,11 +43,5 @@ def test_for_0():
 #def test_punct():
 #    assert value(' .,;: "') == 100
 
-test_bank_for_100()
-test_for_20()
-test_for_0()
-#test_int()
-#test_punct()
-#test_100()
-#test_20()
-#test_0()
+if __name__ == "__main__":
+    main()
