@@ -14,7 +14,7 @@ def test_alphain7():
 
 def test_alphanotin7():
     assert is_valid("P") == False
-    assert is_valid("PY") == False
+    assert is_valid("PY") == True
     assert is_valid("PYTHONABLE") == False
     assert is_valid("FASHIONISTA") == False
     assert is_valid("wrong answer") == False
