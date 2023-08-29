@@ -1,48 +1,49 @@
 from plates import is_valid
 
 def main():
-    test_alphain7()
-    test_alphanotin7()
-    test_alnucorr()
-    test_alnumwrng()
-    test_numeric()
+    test_start()
+    test_length()
+    test_numbers()
+    test_zero()
+    test_punc()
 
-def test_alphain7():
-    assert is_valid("PYTHON") == True
-    assert is_valid("python") == False
-    assert is_valid("VANITY") == True
-    assert is_valid("CRYPTO") == True
+def test_start():
+    assert is_valid('ABCDEF') == True
+    assert is_valid('1ABCDE') == False
+    assert is_valid('A3CDEF') == False
+    assert is_valid('63CDEF') == False
 
-def test_alphanotin7():
-    assert is_valid("P") == False
-    assert is_valid("PY") == True
-    assert is_valid("PYTHONABLE") == False
-    assert is_valid("FASHIONISTA") == False
-    assert is_valid("wrong answer") == False
-    assert is_valid("AWESOMENESS") == False
+def test_length():
+    assert is_valid('ABCDEF') == True
+    assert is_valid('ABCDE') == True
+    assert is_valid('ABC') == True
+    assert is_valid('AB') == True
+    assert is_valid('A') == False
 
+def test_numbers():
+    assert is_valid('ABC123') == True
+    assert is_valid('ABCD12') == True
+    assert is_valid('ABCDE1') == True
+    assert is_valid('AB23EF') == False
+    assert is_valid('ABC23F') == False
+    assert is_valid("AA") == True
+    assert is_valid("A2") == False
+    assert is_valid("2A") == False
+    assert is_valid("22") == False
+    assert is_valid(" 2") == False
 
-def test_alnucorr():
-    assert is_valid("CS50") == True
-    assert is_valid("CS500") == True
-    assert is_valid("PY5000") == True
-    assert is_valid("PY1110") == True
-    assert is_valid("C2") == False
-    assert is_valid("55") == False
+def test_zero():
+    assert is_valid('ABC102') == True
+    assert is_valid('CS50') == True
+    assert is_valid('ABC012') == False
+    assert is_valid('ABCD01') == False
 
-def test_alnumwrng():
-    assert is_valid("CS50P2") == False
-    assert is_valid("CS500A") == False
-    assert is_valid("PY0400") == False
-    assert is_valid("PY1110N") == False
-    assert is_valid("11 100") == False
-    assert is_valid("CS!100") == False
-
-def test_numeric():
-    assert is_valid("3") == False
-    assert is_valid("23") == False
-    assert is_valid("123") == False
-    assert is_valid("1123") == False
+def test_punc():
+    assert is_valid('ABC,23') == False
+    assert is_valid('ABC 23') == False
+    assert is_valid('ABC.12') == False
+    assert is_valid('AB:12') == False
+    assert is_valid('AB/45') == False
 
 if __name__ == "__main__":
     main()
