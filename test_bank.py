@@ -1,7 +1,18 @@
 from bank import value
-import sys
 
-print(value("Hello".lower()))
-print(value("What's up".lower()))
-print(value("Hey there".lower()))
-sys.exit(0)
+def main():
+    test_for_100()
+    test_for_20()
+    test_for_0()
+
+def test_for_100():
+    assert value("Whats up?") == "$100"
+
+def test_for_20():
+    assert value("Hey, there") == "$20"
+
+def test_for_0():
+    assert value("Hello, Kramer!") == "$0"
+
+if __name__ == "__main__":
+    main()
