@@ -9,6 +9,7 @@ def test_lower_upper_cases():
     assert shorten("What's your name? ") == "Wht's yr nm? "
     assert shorten("Twitter") == "Twttr"
     assert shorten("python") == "pythn"
+    assert shorten("INDIA IS THE BEST") == "ND S TH BST"
 
 def test_numeric_cases():
     assert shorten('1234') == '1234'
