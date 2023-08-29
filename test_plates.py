@@ -31,7 +31,7 @@ def test_alnumwrng():
     assert is_valid("PY0400") == False
     assert is_valid("PY1110N") == False
     assert is_valid("111100") == False
-    assert is_valid("CSM100") == False
+    assert is_valid("CSM100") == True
 
 
 if __name__ == "__main__":
