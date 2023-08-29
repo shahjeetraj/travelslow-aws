@@ -1,7 +1,6 @@
 from bank import value
-import pytest
 
-def test_for_100():
+def test_bank_for_100():
     assert value("Whats up?") == "$100"
     assert value("What's up") == "$100"
 
@@ -34,7 +33,7 @@ def test_100():
 def test_punct():
     assert value(' .,;: "') == '$100'
 
-test_for_100()
+test_bank_for_100()
 test_for_20()
 test_for_0()
 test_int()
