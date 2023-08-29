@@ -27,6 +27,8 @@ def test_alnucorr():
     assert is_valid("CS500") == True
     assert is_valid("PY5000") == True
     assert is_valid("PY1110") == True
+    assert is_valid("C2") == False
+    assert is_valid("55") == False
 
 def test_alnumwrng():
     assert is_valid("CS50P2") == False
