@@ -4,10 +4,10 @@ import sys
 
 if len(sys.argv) == 1:
     print("Missing command-line argument")
-    sys.exit()
+    sys.exit(1)
 elif sys.argv[1].isalpha():
     print("Command-line argument is not a number")
-    sys.exit()
+    sys.exit(1)
 else:
     qty = float(sys.argv[1])
 
