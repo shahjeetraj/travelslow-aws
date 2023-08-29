@@ -11,7 +11,7 @@ def test_for_20():
 
 def test_for_0():
     assert value("Hello, Kramer!") == 0
-    assert value("Hello") == 0
+    assert value("HeLLo") == 0
     assert value("HELLO") == 0
 
 #def test_int():
