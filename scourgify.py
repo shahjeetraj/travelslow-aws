@@ -25,11 +25,13 @@ def transform_file(before_file,after_file):
 
     with open(after_file, "w") as file2:
         writer = csv.DictWriter(file2, fieldnames=["first","last","house"])
+        writer.writerow({"first":"first","last":"last","house":"house"})
         for i in range(len(students_data)):
             first = students_data[i]["first"]
             last = students_data[i]["last"]
             house = students_data[i]["house"]
             writer.writerow({"first":first,"last":last,"house":house})
+
 
 if __name__ == "__main__":
     main()
