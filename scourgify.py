@@ -12,8 +12,10 @@ def main():
         sys.exit(1)
     elif not os.path.exists(sys.argv[1]):
         print(f"Could not read {sys.argv[1]}")
+        sys.exit(1)
     else:
         transform_file(sys.argv[1],sys.argv[2])
+        sys.exit()
 
 def transform_file(before_file,after_file):
     students_data = []
