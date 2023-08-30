@@ -18,7 +18,7 @@ def main():
         sys.exit(1)
     else:
         table = get_data_from_csv(sys.argv[1])
-        print(tabulate(table,tablefmt="grid"))
+        print(tabulate(table[1:],table[0],tablefmt="grid"))
 
 def get_data_from_csv(csv_file):
     with open(csv_file) as csvfile:
