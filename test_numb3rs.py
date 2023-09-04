@@ -12,6 +12,9 @@ def test_negative():
     assert validate("cat") == False
     assert validate("275.3.2.1") == False
     assert validate("2753.2.1") == False
+    assert validate("2.753.2.1") == False
+    assert validate("2.7.532.1") == False
+    assert validate("2.7.5.321") == False
 
 if __name__ == "__main__":
     main()
