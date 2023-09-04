@@ -78,6 +78,7 @@ def convert(s):
         new_time = "".join(new_from_time+" to "+new_to_time)
         return new_time
     else:
+        sys.exit("ValueError")
         raise ValueError
 
 if __name__ == "__main__":
