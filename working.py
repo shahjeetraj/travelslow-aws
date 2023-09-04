@@ -1,10 +1,7 @@
 import re
-import sys
-
 
 def main():
     print(convert(input("Hours: ")))
-
 
 def convert(s):
     hours = [1,2,3,4,5,6,7,8,9,10,11,12]
@@ -78,7 +75,6 @@ def convert(s):
         new_time = "".join(new_from_time+" to "+new_to_time)
         return new_time
     else:
-        sys.exit("ValueError")
         raise ValueError
 
 if __name__ == "__main__":
