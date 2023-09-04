@@ -1,4 +1,6 @@
 import re
+import sys
+
 
 def main():
     print(convert(input("Hours: ")))
@@ -27,51 +29,51 @@ def convert(s):
             else:
                 if from_ampm == "PM":
                     from_hh = int(from_hh)+12
-                    print(f"from time is {from_hh:02}:{int(from_mm):02}")
+                    #print(f"from time is {from_hh:02}:{int(from_mm):02}")
                     new_from_time = "".join(str(f"{from_hh:02}:{int(from_mm):02}"))
                 else:
-                    print(f"from time is {int(from_hh):02}:{int(from_mm):02}")
+                    #print(f"from time is {int(from_hh):02}:{int(from_mm):02}")
                     new_from_time = "".join(str(f"{int(from_hh):02}:{int(from_mm):02}"))
         else:
             from_hh = int(from_time)
             if from_hh in hours:
                 if from_ampm == "PM":
                     from_hh = from_hh+12
-                    print(f"from time is {from_hh:02}:00")
+                    #print(f"from time is {from_hh:02}:00")
                     new_from_time = "".join(str(f"{from_hh:02}:00"))
                 else:
-                    print(f"from time is {from_hh:02}:00")
+                    #print(f"from time is {from_hh:02}:00")
                     new_from_time = "".join(str(f"{from_hh:02}:00"))
             else:
-                print("Fail")
+                #print("Fail")
                 raise ValueError
         if ":" in to_time:
             to_time_broken = to_time.split(":")
             to_hh = to_time_broken[0]
             to_mm = to_time_broken[1]
             if int(to_hh) not in hours or int(to_mm) not in mins:
-                print("Fail")
+                #print("Fail")
                 raise ValueError
             else:
                 if to_ampm == "PM":
                     to_hh = int(to_hh)+12
-                    print(f"to time is {to_hh:02}:{int(to_mm):02}")
+                    #print(f"to time is {to_hh:02}:{int(to_mm):02}")
                     new_to_time = "".join(str(f"{to_hh:02}:{int(to_mm):02}"))
                 else:
-                    print(f"to time is {int(to_hh):02}:{int(to_mm):02}")
+                    #print(f"to time is {int(to_hh):02}:{int(to_mm):02}")
                     new_to_time = "".join(str(f"{int(to_hh):02}:{int(to_mm):02}"))
         else:
             to_hh = int(to_time)
             if to_hh in hours:
                 if to_ampm == "PM":
                     to_hh = to_hh+12
-                    print(f"to time is {to_hh:02}:00")
+                    #print(f"to time is {to_hh:02}:00")
                     new_to_time = "".join(str(f"{to_hh:02}:00"))
                 else:
-                    print(f"from time is {to_hh:02}:00")
+                    #print(f"from time is {to_hh:02}:00")
                     new_to_time = "".join(str(f"{to_hh:02}:00"))
             else:
-                print("Fail")
+                #print("Fail")
                 raise ValueError
         new_time = "".join(new_from_time+" to "+new_to_time)
         return new_time
