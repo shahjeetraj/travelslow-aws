@@ -9,7 +9,7 @@ def main():
 def parse(s):
     if re.search(r'(https?://)?(www\.)?'
                 '(youtube|youtu|youtube-nocookie)\.(com|be)/'
-                '(watch\?.*?(?=v=)v=|embed/|v/|.+\?v=)?([^&=%\?]{11})',s) != None:
+                '(watch\?.*?(?=v=)v=|embed/|v/|.+\?v=)?([^&=%\?]{11})',s) != None and re.search('iframe',s) != None:
         x = re.search(r'(https?://)?(www\.)?'
                 '(youtube|youtu|youtube-nocookie)\.(com|be)/'
                 '(watch\?.*?(?=v=)v=|embed/|v/|.+\?v=)?([^&=%\?]{11})',s)
