@@ -14,7 +14,7 @@ def main():
     date_today = date.today()
     diff = date_today - valid_dob
     mins = diff.days * 24 * 60
-    print(f"{p.number_to_words(mins).capitalize()} minutes")
+    print(f"{p.number_to_words(mins,andword='').capitalize()} minutes")
 
 
 def check_date(d):
