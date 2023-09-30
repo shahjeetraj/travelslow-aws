@@ -1,0 +1,42 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<h2>Wishlist under username "{{ user }}"</h2>
+
+{% if not user_wishlist  %}
+<div style="padding-top: 50px; padding-bottom: 300px; margin: auto; width: 50%;">
+<div class="card">
+    <div class="card-header">
+      Nope!
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">No favorites found</h5>
+      <p class="card-text">Start adding to Wishlist today!!</p>
+      <a href="{% url 'index' %}" style="background-color: #662E9B;" class="btn btn-primary">Active Listings</a>
+    </div>
+</div>
+</div>
+
+{% else %}
+
+
+<div class="row row-cols-1 row-cols-md-3 g-4 mx-auto">
+    {% for l in user_wishlist %}
+    <div class="col" style="min-width: 300px; max-width: 300px; overflow: hidden;">
+        <div class="card h-100 text-center" style="margin: 0%;">
+            <img src="{{ l.imageUrl }}" class="card-img-top" alt="{{ l.title }}" style="min-height: 200px; max-height: 200px;">
+            <div class="card-body">
+                <h5 class="card-title">{{ l.title }}</h5>
+                <p class="card-text">{{ l.description }}</p>
+            </div>
+            <div class="card-footer">
+                <h6>Minimum Bid: &#8377;{{ l.price.bid|floatformat:2 }}</h6>
+                <a href="{% url 'listing' id=l.id %}" style="background-color: #662E9B; color: #fff;" class="btn">View Listing</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,140 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+    </symbol>
+    <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+    </symbol>
+</svg>
+<h2 class="mb-4">Listing Details: {{ listing.title }}</h2>
+
+<div style="max-width: 500px; margin: auto;">
+    {% if user == listing.owner and listing.isActive and listing.price.bidUser != listing.owner %}
+        <form action="{% url 'auctionClose' listing.id %}" method="POST">
+            {% csrf_token %}
+        <button class="btn btn-outline-danger mb-3" style="border-color: #EA3546; margin: auto;" type="submit">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-octagon" viewBox="0 0 16 16">
+            <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353L4.54.146zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1H5.1z" />
+            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" /></svg>
+            Stop Auction</button>
+        </form>
+    {% endif %}
+
+    
+    <div class="card mb-3">
+
+        {% if listing.isActive %}
+            <img src="{{ listing.imageUrl }}" class="card-img-top" alt="{{ listing.title }}">
+        {% else %}
+            <div class="container">
+                <img style="filter: grayscale(80%);" src="{{ listing.imageUrl }}" class="card-img-top" alt="{{ listing.title }}">
+                {% if user == listing.price.bidUser %}
+                <div style="text-align: center; background-color: #fff; font-size: xx-large; position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%); color: #662E9B;">Congratulations, you have won this Auction !</div>
+                {% else %}
+                <div style="background-color: #fff; font-size: xx-large; position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%); color: #EA3546;">Listing Closed !</div>
+                {% endif %}
+            </div>
+        {% endif %}
+        <div class="card-body">
+            <h5 class="card-title">Holiday Name: {{ listing.title }}</h5>
+            {% if user.is_authenticated and user != listing.owner and listing.isActive %}
+                {% if isWishlisted %}
+                <form action="{% url 'wishlistRemove' id=listing.id %}" method="POST">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-outline-danger" style="border-color: #EA3546;" type="submit">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#662E9B" class="bi bi-bookmark-heart-fill" viewBox="0 0 16 16"><path d="M2 15.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v13.5zM8 4.41c1.387-1.425 4.854 1.07 0 4.277C3.146 5.48 6.613 2.986 8 4.412z" /></svg>
+                        Remove from Wishlist</button>
+                </form>
+                {% else %}
+                <form action="{% url 'wishlistAdd' id=listing.id %}" method="POST">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-success" style="background-color: #662E9B;" type="submit"><svg
+                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#662E9B"
+                        class="bi bi-bookmark-heart-fill" viewBox="0 0 16 16">
+                        <path
+                            d="M2 15.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v13.5zM8 4.41c1.387-1.425 4.854 1.07 0 4.277C3.146 5.48 6.613 2.986 8 4.412z" />
+                    </svg> Add to Wishlist</button>
+                </form>
+                {% endif %}
+            {% endif %}
+            <p class="card-text py-2">Holiday Details: {{ listing.description }}</p>
+            <p class="card-text">Owner: {{ listing.owner }}</p>
+            <h5 class="card-text text">Minimum Bid: &#8377;{{ listing.price.bid|floatformat:2 }}</h5>
+            
+        </div>
+        {% if user.is_authenticated and user != listing.owner and listing.isActive %}
+        <div class="card-footer text-muted">
+            <form class="input-group" action="{% url 'bidAdd' id=listing.id %}" method="POST">
+                {% csrf_token %}
+                <input type="number" min="0" class="form-control" name="bid"
+                    placeholder="Enter Amount greater than {{ listing.price.bid }}">
+                <button style="background-color: #662E9B;" type="submit" class="btn btn-primary">Bid</button>
+            </form>
+        </div>
+        {% elif not listing.isActive %}
+        <div class="card-footer text-muted">
+            <form class="input-group">
+                <input disabled type="number" min="0" class="form-control" name="bid"
+                    placeholder="Bidding is disabled since Auction is closed !">
+                <button style="background-color: #EA3546;" type="submit" class="btn btn-primary disabled">Bid</button>
+            </form>
+        </div>
+        {% else %}
+        <div class="card-footer text-muted">
+            <form class="input-group">
+                <input disabled type="number" min="0" class="form-control" name="bid"
+                    placeholder="Bidding is disabled for the Listing Owner">
+                <button style="background-color: #EA3546;" type="submit" class="btn btn-primary disabled">Bid</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if message == "Bid updated successfully" %}
+    <div class="alert alert-success d-flex align-items-center" style="font-size: small; height: 20px; margin: auto;"
+        role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="14" height="14" role="img" aria-label="Success:">
+            <use xlink:href="#check-circle-fill" />
+        </svg>
+        <div>{{ message }}</div>
+    </div>
+    {% elif message == "Update Failed since Bid is lesser than previous/minimum bid !" %}
+    <div class="alert alert-danger d-flex align-items-center" style="font-size: small; height: 20px; margin: auto;"
+        role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="14" height="14" role="img" aria-label="Danger:">
+            <use xlink:href="#exclamation-triangle-fill" />
+        </svg>
+        <div>{{ message }}</div>
+    </div>
+    {% endif %}
+</div>
+{% if user == listing.owner and listing.price.bidUser != listing.owner %}
+<div class="card" style="background-color: #F9C80E; max-width: 500px; margin: auto;">
+    <div class="card-header">
+        Latest Bid received: {{ listing.price }}
+    </div>
+</div>
+{% endif %}
+<div style="width: 85%; margin: auto; padding-top: 25px;">
+    <h5><strong>Comments Section</strong></h5>
+    {% if user.is_authenticated %}
+    <form class="input-group mb-3" action="{% url 'commentAdd' id=listing.id %}" method="POST">
+        {% csrf_token %}
+        <span class="input-group-text" id="inputGroup-sizing-default">Comment</span>
+        <input type="text" class="form-control" name="comment" placeholder="Add a Comment">
+        <button style="background-color: #43BCCD;" type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    {% endif %}
+    <ul style="padding-bottom: 100px;" class="list-group list-group-flush">
+        {% for comment in allComments %}
+        <li class="list-group-item">{{ comment }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}
