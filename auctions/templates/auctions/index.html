@@ -1,0 +1,24 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<h2 style="padding-left: 10px;">All Active Listings</h2>
+
+<div class="row row-cols-1 row-cols-md-3 g-4 mx-auto card-group">
+    {% for l in active_list %}
+    <div class="col" style="min-width: 300px; max-width: 300px; overflow: hidden;">
+        <div class="card h-100 text-center" style="margin: 0%;">
+            <img src="{{ l.imageUrl }}" class="card-img-top" alt="{{ l.title }}" style="min-height: 200px; max-height: 200px;">
+            <div class="card-body">
+                <h5 class="card-title">{{ l.title }}</h5>
+                <p class="card-text">{{ l.description }}</p>
+            </div>
+            <div class="card-footer">
+                <h6>Minimum Bid: &#8377;{{ l.price.bid|floatformat:2 }}</h6>
+                <a href="{% url 'listing' id=l.id %}" style="background-color: #662E9B; color: #fff;" class="btn">View Listing</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,247 @@
+{% load static %}
+
+<!Doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <!-- Bootstrap core CSS -->
+    <title>{% block title %}True Auctions{% endblock %}</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'auctions/favicon.ico' %}"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <link href="https://netdna.bootstrapcdn.com/font-awesome/4.0.1/css/font-awesome.css" rel="stylesheet">
+    <link href="{% static 'auctions/carousel.css' %}" rel="stylesheet">
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+    
+    <!-- Custom styles for this template -->
+    <link href="carousel.css" rel="stylesheet">
+  </head>
+  <body>
+    
+    <div class="container">
+        <header
+            class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3">
+            <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+                <img src="{% static 'auctions/logo.png' %}" alt="True Auctions">
+                <!--<svg xmlns="http://www.w3.org/2000/svg" height="2em" viewBox="0 0 512 512"><path d="M318.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-120 120c-12.5 12.5-12.5 32.8 0 45.3l16 16c12.5 12.5 32.8 12.5 45.3 0l4-4L325.4 293.4l-4 4c-12.5 12.5-12.5 32.8 0 45.3l16 16c12.5 12.5 32.8 12.5 45.3 0l120-120c12.5-12.5 12.5-32.8 0-45.3l-16-16c-12.5-12.5-32.8-12.5-45.3 0l-4 4L330.6 74.6l4-4c12.5-12.5 12.5-32.8 0-45.3l-16-16zm-152 288c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l48 48c12.5 12.5 32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-1.4-1.4L272 285.3 226.7 240 168 298.7l-1.4-1.4z"/></svg>-->
+            </a>
+
+            <ul class="nav navbar col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+                <li><a href="{% url 'home' %}" class="nav-link px-2 link-dark">Home</a></li>
+                <li><a href="{% url 'index' %}" class="nav-link px-2 link-dark">Active Listings</a></li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link px-2 link-dark dropdown-toggle" href="#"
+                        data-bs-toggle="dropdown">Category</a>
+                    <ul class="dropdown-menu">
+                        {% for cat in categories %}
+                        <li><a class="dropdown-item" href="{% url 'category_wise_listing' category=cat %}">{{ cat }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item dropdown">
+                  <a href="#" class="nav-link px-2 link-dark dropdown-toggle" href="#"
+                      data-bs-toggle="dropdown">My Auctions</a>
+                  <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="{% url 'create_listing' %}" class="nav-link px-2 link-dark">New Listing</a></li>
+                      <li><a class="dropdown-item" href="{% url 'my_listings' %}" class="nav-link px-2 link-dark">My Listings</a></li>
+                      <li><a class="dropdown-item" href="{% url 'wishlistDisplay' %}" class="nav-link px-2 link-dark">My Wishlist</a></li>
+                      <li><a class="dropdown-item" href="{% url 'myBid' %}" class="nav-link px-2 link-dark">My Bids</a></li>
+                  </ul>
+              </li>
+              {% endif %}
+                <li><a href="{% url 'about' %}" class="nav-link px-2 link-dark">About</a></li>
+            </ul>
+
+            <div class="col-md-3 text-end">
+                {% if user.is_authenticated %}
+                <span style="font-size: small;">Signed in as <strong style="color: #662E9B;">{{ user.username }}</strong>.</span>
+                <a href="{% url 'logout' %}" type="button" class="btn btn-outline-secondary">Logout</a>
+                {% else %}
+                <span style="font-size: small;">
+                    <strong">Please Login</strong>.
+                </span>
+                <a href="{% url 'login' %}" type="button" style="background-color: #662E9B; color: #fff;"
+                    class="btn me-2">Login</a>
+                <a href="{% url 'register' %}" type="button" class="btn me-2"
+                    style="border-color: #662E9B; color: #662E9B;">Register</a>
+                {% endif %}
+            </div>
+        </header>
+    </div>
+
+<main>
+
+  <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img class="bd-placeholder-img" src="{% static 'auctions/img-1.jpg' %}"></img>
+
+        <div class="container">
+          <div class="carousel-caption text-start">
+            <h1>Unbelievable Trips</h1>
+            <p>Even more unbelievable prices !!</p>
+            <p><a class="btn btn-lg" href="{% url 'register' %}" style="background-color: #F86624; color: #fff;">Register today</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img class="bd-placeholder-img" src="{% static 'auctions/img-2.jpg' %}"></img>
+
+        <div class="container">
+          <div class="carousel-caption">
+            <h1>Selling out Fast!</h1>
+            <p>Book before the stock runs out.</p>
+            <p><a class="btn btn-lg" style="background-color: #F9C80E; color: #fff;" href="{% url 'index' %}">View Active Listings</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img class="bd-placeholder-img" src="{% static 'auctions/img-3.jpg' %}"></img>
+
+        <div class="container">
+          <div class="carousel-caption text-end">
+            <h1>Have something to offer?</h1>
+            <p>You too can list your holidays for Auction !!</p>
+            <p><a style="background-color: #43BCCD; color: #fff;" class="btn btn-lg" href="#">Login & List Holiday</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+
+
+  <!-- Marketing messaging and featurettes
+  ================================================== -->
+  <!-- Wrap the rest of the page in another container to center all the content. -->
+
+  <div class="container marketing">
+
+    <!-- Three columns of text below the carousel -->
+    <div class="row">
+      <div class="col-lg-4">
+        <svg xmlns="http://www.w3.org/2000/svg" width="140" height="140" fill="#662E9B" class="bi bi-bank pb-3" viewBox="0 0 16 16">
+            <path d="m8 0 6.61 3h.89a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5H15v7a.5.5 0 0 1 .485.38l.5 2a.498.498 0 0 1-.485.62H.5a.498.498 0 0 1-.485-.62l.5-2A.501.501 0 0 1 1 13V6H.5a.5.5 0 0 1-.5-.5v-2A.5.5 0 0 1 .5 3h.89L8 0ZM3.777 3h8.447L8 1 3.777 3ZM2 6v7h1V6H2Zm2 0v7h2.5V6H4Zm3.5 0v7h1V6h-1Zm2 0v7H12V6H9.5ZM13 6v7h1V6h-1Zm2-1V4H1v1h14Zm-.39 9H1.39l-.25 1h13.72l-.25-1Z"/>
+          </svg>
+
+        <h2>Truly Trustworthy</h2>
+        <p>True Auctions is promoted by experienced professionals. Also, we are goverened by eCommerce Policies of Indian Government. </p>
+        <!-- <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>-->
+      </div><!-- /.col-lg-4 -->
+      <div class="col-lg-4">
+        <svg xmlns="http://www.w3.org/2000/svg" width="140" height="140" fill="#662E9B" class="bi bi-safe2 pb-3" viewBox="0 0 16 16">
+            <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h12A1.5 1.5 0 0 1 16 2.5v12a1.5 1.5 0 0 1-1.5 1.5h-12A1.5 1.5 0 0 1 1 14.5V14H.5a.5.5 0 0 1 0-1H1V9H.5a.5.5 0 0 1 0-1H1V4H.5a.5.5 0 0 1 0-1H1v-.5zM2.5 2a.5.5 0 0 0-.5.5v12a.5.5 0 0 0 .5.5h12a.5.5 0 0 0 .5-.5v-12a.5.5 0 0 0-.5-.5h-12z"/>
+            <path d="M5.035 8h1.528c.047-.184.12-.357.214-.516l-1.08-1.08A3.482 3.482 0 0 0 5.035 8zm1.369-2.303 1.08 1.08c.16-.094.332-.167.516-.214V5.035a3.482 3.482 0 0 0-1.596.662zM9 5.035v1.528c.184.047.357.12.516.214l1.08-1.08A3.482 3.482 0 0 0 9 5.035zm2.303 1.369-1.08 1.08c.094.16.167.332.214.516h1.528a3.483 3.483 0 0 0-.662-1.596zM11.965 9h-1.528c-.047.184-.12.357-.214.516l1.08 1.08A3.483 3.483 0 0 0 11.965 9zm-1.369 2.303-1.08-1.08c-.16.094-.332.167-.516.214v1.528a3.483 3.483 0 0 0 1.596-.662zM8 11.965v-1.528a1.989 1.989 0 0 1-.516-.214l-1.08 1.08A3.483 3.483 0 0 0 8 11.965zm-2.303-1.369 1.08-1.08A1.988 1.988 0 0 1 6.563 9H5.035c.085.593.319 1.138.662 1.596zM4 8.5a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0zm4.5-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+          </svg>
+
+        <h2>Truly Safe</h2>
+        <p>Nothing is more safe than paying online. Yes, your payments are secure and governed by chargeback laws.</p>
+        <!-- <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>-->
+      </div><!-- /.col-lg-4 -->
+      <div class="col-lg-4">
+        <svg xmlns="http://www.w3.org/2000/svg" width="140" height="140" fill="#662E9B" class="bi bi-globe-central-south-asia pb-3" viewBox="0 0 16 16">
+            <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0ZM4.882 1.731a.482.482 0 0 0 .14.291.487.487 0 0 1-.126.78l-.291.146a.721.721 0 0 0-.188.135l-.48.48a1 1 0 0 1-1.023.242l-.02-.007a.996.996 0 0 0-.462-.04 7.03 7.03 0 0 1 2.45-2.027Zm-3 9.674.86-.216a1 1 0 0 0 .758-.97v-.184a1 1 0 0 1 .445-.832l.04-.026a1 1 0 0 0 .152-1.54L3.121 6.621a.414.414 0 0 1 .542-.624l1.09.818a.5.5 0 0 0 .523.047.5.5 0 0 1 .724.447v.455a.78.78 0 0 0 .131.433l.795 1.192a1 1 0 0 1 .116.238l.73 2.19a1 1 0 0 0 .949.683h.058a1 1 0 0 0 .949-.684l.73-2.189a1 1 0 0 1 .116-.238l.791-1.187A.454.454 0 0 1 11.743 8c.16 0 .306.084.392.218.557.875 1.63 2.282 2.365 2.282a.61.61 0 0 0 .04-.001 7.003 7.003 0 0 1-12.658.905Z"/>
+          </svg>
+
+        <h2>Truly Global</h2>
+        <p>Partners from around the world are displaying their products. And customers from everywhere are welcome to bid.</p>
+        <!-- <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>-->
+      </div><!-- /.col-lg-4 -->
+    </div><!-- /.row -->
+
+
+    <!-- START THE FEATURETTES -->
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <div class="col-md-7">
+        <h2 class="featurette-heading">Wishlist your favorite trips!. <span class="text-muted">With only a click !!.</span></h2>
+        <p class="lead">All the places in the whole wide world, at the best prices. That too at your fingertips.</p>
+      </div>
+      <div class="col-md-5">
+        <img align="right" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" style="width: 300px; height: 300px; object-fit: cover; object-position: 25% 25%;" src="{% static 'auctions/wishlist.jpg' %}"><title>Wishlist</title></img>
+
+      </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <div class="col-md-7 order-md-2">
+        <h2 class="featurette-heading">Bid=Budget!<br/><span class="text-muted">Bidding-facility is available!!</span></h2>
+        <p class="lead">The most exciting part about True Auctions is the completely fair bidding process. You can decide the worth of your favorite trip.</p>
+      </div>
+      <div class="col-md-5 order-md-1">
+        <img class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" style="width: 300px; height: 300px; object-fit: cover; object-position: 25% 25%;" src="{% static 'auctions/bid.jpg' %}"><title>Wishlist</title></img>
+
+      </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <div class="col-md-7">
+        <h2 class="featurette-heading">And lastly, WIN! <br/><span class="text-muted">Victory over a message !!.</span></h2>
+        <p class="lead">We intimate our winners over email and message. We even help you contact the listing owner and resolve disputes if any.</p>
+      </div>
+      <div class="col-md-5">
+        <img align="right" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" style="width: 300px; height: 300px; object-fit: cover; object-position: 25% 25%;" src="{% static 'auctions/win.jpg' %}"><title>Wishlist</title></img>
+
+      </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <!-- /END THE FEATURETTES -->
+
+  </div><!-- /.container -->
+
+
+  <!-- FOOTER -->
+  <footer class="container">
+    <p class="float-end"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#662E9B" class="bi bi-arrow-up-circle bounce" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/></svg></p>
+    <p>&copy; 2023 True Auctions, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+  </footer>
+</main>
+
+
+    <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+
+      
+  </body>
+</html>

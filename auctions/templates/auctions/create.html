@@ -1,0 +1,51 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<h2 class="px-3">Create Listing</h2>
+
+<div style="padding-top: 50px; width: 75%;" class="container mb-3">
+<form action="{% url 'create_listing' %}" method="POST">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input required type="text" name="title" class="form-control" id="title" placeholder="Provide a Title of Listing">
+        <div class="invalid-feedback">Title is Mandatory.</div>
+    </div>
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea required type="text" name="description" class="form-control" id="description"
+            placeholder="Provide a Description for Listing"></textarea>
+            <div class="invalid-feedback">Description is Mandatory.</div>
+    </div>
+    <div class="mb-3">
+        <label for="imageUrl" class="form-label">Image URL</label>
+        <input required type="text" name="imageUrl" class="form-control" id="imageUrl"
+            placeholder="Provide the Image URL of Listing">
+            <div class="invalid-feedback">Image url is Mandatory.</div>
+    </div>
+    <div class="mb-3">
+        <label for="price" class="form-label">Price</label>
+        <input required type="number" name="price" min="0" class="form-control" id="price" placeholder="Provide the Price of Listing">
+        <div class="invalid-feedback">Price is Mandatory.</div>
+    </div>
+    <div class="mb-3">
+        <label for="category" class="category">Category</label>
+        <select required name="category" class="form-select mb-3" style="display: block; width: 100%; padding: 0.375rem 2.25rem 0.375rem 0.75rem; font-size: 1rem; font-weight: 400; line-height: 1.5; border: 1px solid #ced4da; border-radius: 0.25rem; transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
+            <option selected value="">Select Category for the Listing</option>
+            {% for cat in categories %}
+            <option name="{{ cat }}", value="{{ cat }}">{{ cat }}</option>
+            {% endfor %}
+      </select>
+      <div class="invalid-feedback">Select a value from dropdown</div>
+    </div>
+    <div class="btn-toolbar">
+        <div class="btn-group me-2" style="margin-right: 10px;">
+            <input style="background-color: #43BCCD;" type="submit" class="btn btn-primary" value="New Listing">
+        </div>
+        <div class="btn-group me-2">
+            <button type="button" onclick="window.history.back()" class="btn btn-secondary">Cancel</button>
+        </div>
+    </div>
+</form>
+</div>
+{% endblock %}
