@@ -1,0 +1,41 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}Mail{% endblock %}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="stylesheet" href="{% static 'mail/styles.css' %}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static 'mail/apple-touch-icon' %}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'mail/favicon-32x32.png' %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'mail/favicon-16x16.png' %}">
+        <link rel="manifest" href="{% static 'mail/site.webmanifest' %}">
+        {% block script %}
+        {% endblock %}
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                  <img style="height: 60px;" class="navbar-brand" src="{% static 'mail/logo.png' %}"></img>
+                  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                  </button>
+                  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                            {% if user.is_authenticated %}
+                        <div class="topnav-right">{{ user }} is logged in.</div>
+                            {% else %}
+                        <div class="topnav-right">Please Login</div>
+                            {% endif %}
+                    </div>
+                  </div>
+                </div>
+            </nav>
+        </header>
+        <div class="container">
+            {% block body %}
+            {% endblock %}
+        </div>
+    </body>
+</html>
