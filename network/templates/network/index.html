@@ -1,0 +1,79 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+
+<div class="container"></div>
+    <h1 style="color: #0d8779; font-size: 25px; padding: 20px; padding-bottom: 3px;">All the Djingos' djings..</h1>
+    <h2 style="color: #0d8779; font-size: 16px; padding-left: 20px">Practice your freedom of speech!</h2>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</div>
+{% if user.is_authenticated %}
+<div style="max-width: 50%;" class="container">
+    <div class="mb-3">
+        <label for="postText" class="form-label">Speak your Mind</label>
+        <form action="{% url 'postCreate' %}" method="POST">
+            {% csrf_token %}
+            <textarea class="form-control" id="postText" name="postText" rows="3" placeholder="Dont create Posts, Just djinggg!!"></textarea>
+            <input type="submit" value="djing it!" class="btn btn-sm px-3 my-3 btn-success" style="background-color: #0d8779;">
+        </form>
+    </div>
+</div>
+{% endif %}
+<div class="container">
+    {% for post in pagePosts %}
+    <div class="card border-success mb-3" style="width: inherit;">
+        <div class="card-header bg-transparent border-success">
+            {% load static %}
+            <img style="height: 28px;" src="{% static 'network/thumb.svg' %}">
+            <a href="{% url 'profileView' user_id=post.postAuthor.id %}">{{ post.postAuthor }}</a>
+        </div>
+        <div id="post_id_{{ post.id }}" class="card-body text-success border-success py-2">
+            {% if user.is_authenticated %}
+                {% if user == post.postAuthor %}
+            <button id="editBtn" style="font-size: small;" class="btn btn-sm btn-outline-dark" onclick="editText(this)"><i class="bi bi-pencil-square"></i></button>
+            <div id="textAreaContainer" style="display: none;">
+                <textarea id="editableText" style="display: none;"></textarea>
+            </div>
+            <div class="row mx-3 mt-1">
+                <button id="saveBtn" data-postid="{{ post.id }}" style="font-size: small; display: none;" class="btn btn-sm btn-outline-success" onclick="saveText(this)">Save</button>
+                <button id="cancelBtn" style="font-size: small; display: none; margin-left: 3px;" class="btn btn-sm btn-outline-secondary" onclick="cancelEdit(this)">Cancel</button>
+            </div>
+                {% else %}
+                    <i id="heartType{{ post.id }}" data-postid="{{ post.id }}" style="cursor: pointer; font-size: 30px;" class="bi {% if post.id in myLikes %}bi-suit-heart-fill{% else %}bi-suit-heart{% endif %} text-danger" onclick="toggleHeart(this)"></i>
+                    <span id="likeCount{{ post.id }}">{{ post.postLikes }}</span>
+                {% endif %}
+            {% else %}
+            <i id="heartType" style="font-size: 30px;" class="bi bi-suit-heart text-danger"></i>
+            <span id="likeCount">{{ post.postLikes }}</span>
+            {% endif %}
+            <p class="card-text" id="postText{{ post.id }}">{{ post.postText }}</p>
+        </div>
+        <div class="card-footer bg-transparent border-success">
+            <small>djingged on {{ post.postDate }}</small>
+        </div>
+    </div>
+    {% endfor %}
+    
+    <nav>
+        <div class="btn-group d-flex mb-3 justify-content-center">
+            {% if pagePosts.has_previous %}
+                <a class="btn btn-sm btn-outline-success" href="?page=1">&laquo; First</a>
+                <a class="btn btn-sm btn-outline-success" href="?page={{ pagePosts.previous_page_number }}">&lsaquo; Prev</a>
+            {% else %}
+                <a class="btn btn-sm btn-outline-secondary disabled" href="#">&laquo; First</a>
+                <a class="btn btn-sm btn-outline-secondary disabled" href="#">&lsaquo; Prev</a>
+            {% endif %}
+            <li class="btn btn-sm btn-outline-success disabled">Page {{ pagePosts.number }} of {{ pagePosts.paginator.num_pages }}</li>
+            {% if pagePosts.has_next %}
+                <a class="btn btn-sm btn-outline-success" href="?page={{ pagePosts.next_page_number }}">Next &rsaquo;</a>
+                <a class="btn btn-sm btn-outline-success" href="?page={{ pagePosts.paginator.num_pages }}">Last &raquo;</a>
+            {% else %}
+                <a class="btn btn-sm btn-outline-secondary disabled" href="#">Next &rsaquo;</a>
+                <a class="btn btn-sm btn-outline-secondary disabled" href="#">Last &raquo;</a>
+            {% endif %}
+            </div>
+        </div>
+    </nav>
+</div>
+
+{% endblock %}
