@@ -1,0 +1,179 @@
+{% extends "destinations/layout.html" %}
+{% load static %}
+
+{% block title %}Travel Slow: Have you heard of these destinations? Let us know..{% endblock %}
+
+{% block body %}
+
+<script>
+    const myModal = document.getElementById('popUp')
+    const myInput = document.getElementById('myInput')
+
+    myModal.addEventListener('shown.bs.modal', () => {
+        myInput.focus()
+    })
+
+    function toggleThemes() {
+        var themeCheckboxes = document.querySelectorAll("#themeContainer input[type='checkbox']");
+        var activateThemes = document.getElementById("activateThemes");
+
+        // Enable or disable theme checkboxes based on the "Activate Themes" checkbox
+        themeCheckboxes.forEach(function (checkbox) {
+            checkbox.disabled = !activateThemes.checked;
+        });
+    }
+
+    function toggleDream() {
+        var dreamCheckbox = document.querySelectorAll("#dreamContainer input[type='text']");
+        var activateDream = document.getElementById("activateDream");
+
+        // Enable or disable theme checkboxes based on the "Activate Themes" checkbox
+        dreamCheckbox.forEach(function (checkbox) {
+            checkbox.disabled = !activateDream.checked;
+        });
+    }
+
+    function toggleCountry() {
+        var countryCheckbox = document.querySelectorAll("#countryContainer input[type='text']");
+        var activateCountry = document.getElementById("activateCountry");
+
+        // Enable or disable theme checkboxes based on the "Activate Themes" checkbox
+        countryCheckbox.forEach(function (checkbox) {
+            checkbox.disabled = !activateCountry.checked;
+        });
+    }
+</script>
+
+<h2 style="font-size: 30px;">Destinations for you</h2>
+
+<div class="searchPage d-flex align-items-center text-align-center">
+    <p id="searchMessage">{{ message }}</p>
+</div>
+<div>
+    <div id="img-results-top-track" class="container px-4 d-flex white-space: nowrap; overflow: auto;" data-srch-id="{{ searchGroup.id }}" style="height: 65vh;">
+        <figure>
+            <img class="img-results-top" id="img-result-1" src="{% static 'destinations/giphy.gif' %}">
+            <figcaption id="fig1">Tranquil</figcaption>
+        </figure>
+        <figure>
+            <img class="img-results-top" id="img-result-2" src="{% static 'destinations/giphy.gif' %}">
+            <figcaption id="fig2">Serene</figcaption>
+        </figure>
+        <figure>
+            <img class="img-results-top" id="img-result-3" src="{% static 'destinations/giphy.gif' %}">
+            <figcaption id="fig3">Idyllic</figcaption>
+        </figure>
+        <figure>
+            <img class="img-results-top" id="img-result-4" src="{% static 'destinations/giphy.gif' %}">
+            <figcaption id="fig4">Relaxed</figcaption>
+        </figure>
+        <figure>
+            <img class="img-results-top" id="img-result-5" src="{% static 'destinations/giphy.gif' %}">
+            <figcaption id="fig5">Peaceful</figcaption>
+        </figure>
+    </div>
+    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center mb-5">
+        <button type="button" data-bs-toggle="modal" data-bs-target="#modifyPopUp" id="modifySearch" class="searchPgBtn btn btn-outline-dark btn-lg px-2" disabled>Modify Criteria</button>
+        <button type="button" data-bs-toggle="modal" data-bs-target="#modifyPopUp" id="modifySearchMobile" class="searchPgBtn btn btn-outline-dark btn-lg px-2" disabled><i class="bi bi-sliders2-vertical"></i></button>
+        <!-- <a type="button" href="{% url 'viewMore' id=searchGroup.id %}" id="viewMore" class="searchPgBtn btn btn-dark btn-lg px-4" disabled>View More</a> -->
+        <!-- <a type="button" href="{% url 'viewMore' id=searchGroup.id %}" id="viewMore" class="searchPgBtn btn btn-dark btn-lg px-4" disabled><i class="bi bi-fast-forward"></i></a> -->
+    </div>
+</div>
+
+<div id="modifyPopUp" class="modal modal-xl modal-fullscreen-sm-down" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border-radius: 0px;">
+            <div class="modal-header">
+                <h4 class="modal-title">Modify your Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'search' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="tContainer">
+                        <div class="left-column">
+                            <input type="checkbox" id="activateThemes" onchange="toggleThemes()">
+                            <label for="activateThemes">Theme:</label>
+                        </div>
+                        <div class="right-column text-start" id="themeContainer">
+                            <div class="row" style="width: 100%;">
+                                <div class="colTheme">
+                                    <div class="pb-3">
+                                        <input type="checkbox" value="Adventure Travel" name="adventure" id="adventure"
+                                            disabled>
+                                        <label for="adventure">Adventure Travel</label>
+                                    </div>
+                                    <div class="pb-3">
+                                        <input type="checkbox" value="Beach Getaway" name="beach" id="beach" disabled>
+                                        <label for="beach">Beach Getaway</label>
+                                    </div>
+                                    <div class="pb-3">
+                                        <input type="checkbox" value="Historical Destination" name="history"
+                                            id="history" disabled>
+                                        <label for="history">Historical Destination</label>
+                                    </div>
+                                </div>
+                                <div class="colTheme">
+                                    <div class="pb-3">
+                                        <input type="checkbox" value="Cultural Fest" name="culture" id="culture"
+                                            disabled>
+                                        <label for="culture">Cultural Fest</label>
+                                    </div>
+                                    <div class="pb-3">
+                                        <input type="checkbox" value="Island Hopping" name="island" id="island"
+                                            disabled>
+                                        <label for="island">Island Hopping</label>
+                                    </div>
+                                    <div class="pb-3">
+                                        <input type="checkbox" value="Road Trip" name="road" id="road" disabled>
+                                        <label for="road">Road Trip</label>
+                                    </div>
+                                </div>
+                                <div class="colTheme">
+                                    <div class="pb-3">
+                                        <input type="checkbox" name="luxury" value="Luxury Experience" id="luxury"
+                                            disabled>
+                                        <label for="luxury">Luxury Experience</label>
+                                    </div>
+                                    <div class="pb-3">
+                                        <input type="checkbox" name="cruise" value="Cruise Vacation" id="cruise"
+                                            disabled>
+                                        <label for="cruise">Cruise Vacation</label>
+                                    </div>
+                                    <div class="pb-3">
+                                        <input type="checkbox" name="community" value="Community Service" id="community"
+                                            disabled>
+                                        <label for="community">Community Service</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tContainer1">
+                        <div class="left-column">
+                            <input type="checkbox" id="activateDream" onchange="toggleDream()">
+                            <label for="activateDream">Dream:</label>
+                        </div>
+                        <div class="right-column text-start" id="dreamContainer">
+                            <input type="text" name="dreamText" id="dreamText" disabled style="width: 85%;">
+                        </div>
+                    </div>
+                    <div class="tContainer1">
+                        <div class="left-column">
+                            <input type="checkbox" id="activateCountry" onchange="toggleCountry()">
+                            <label for="activateCountry">Country:</label>
+                        </div>
+                        <div class="right-column text-start" id="countryContainer">
+                            <input type="text" name="countryList" id="countryList" disabled style="width: 85%;">
+                        </div>
+                    </div>
+                    <input type="submit" class="btn btn-dark" value="Search">
+                </form>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'destinations/search.js' %}"></script>
+{% endblock %}

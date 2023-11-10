@@ -1,0 +1,30 @@
+{% extends "destinations/layout.html" %}
+{% load static %}
+
+{% block title %}Travel Slow: A Destination called {{ destDetails.destination_name }}, in {{ destDetails.destination_country }} !{% endblock %}
+
+{% block body %}
+
+<div class="container destination-container row row-cols-sm-1 row-cols-md-4 pt-3 m-0 d-flex" style="background-image: url('/static/destinations/bg2.png');">
+    <div class="dest-col col">
+        <h2 class="text-start" style="font-size: 26px">{{ destDetails.destination_name }}, {{ destDetails.destination_country }}</h2>
+        <p class="text-start ps-5">{{ destDetails.destination_info }}</p>
+    </div>
+    <div class="dest-col col">
+        <div class="dest-col-img" style="background-image: url('{{ destDetails.destination_imageURL }}');"></div>
+        <div class="dest-col-img" style="background-image: url('{{ destDetails.destination_imageURL_2 }}');"></div>
+    </div>
+    <div class="dest-col col">
+        <div class="dest-col-img" style="background-image: url('{{ destDetails.destination_imageURL_3 }}');"></div>
+        <div class="dest-col-img" style="background-image: url('{{ destDetails.destination_imageURL_4 }}');"></div>
+    </div>
+    <div class="dest-col col">
+        <div class="dest-col-img" style="background-image: url('{{ destDetails.destination_imageURL_5 }}');"></div>
+        <div class="dest-col-img" style="background-image: url('{{ destDetails.destination_imageURL_6 }}');"></div>
+    </div>
+</div>
+<div class="justify-content-center mb-5">
+    <button style="width: 65px;" type="button" onclick="history.back()" class="btn btn-outline-dark">Back</button>
+</div>
+
+{% endblock %}
