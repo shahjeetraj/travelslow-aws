@@ -18,7 +18,6 @@ int main(void)
         printf("%.*s", j, "           ");
         printf("%.*s", i, "#############");
         printf("  ");
-        printf("%.*s", i, "############");
-        printf("%.*s\n", j, "           ");
+        printf("%.*s\n", i, "############");
     }
 }
