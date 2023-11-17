@@ -17,7 +17,7 @@ int main(void)
         {
             target_population = get_int("End size: ");
         }
-        while (target_population <= start_population);
+        while (target_population < start_population);
 
     // TODO: Calculate number of years until we reach threshold
     int new_population = 0;
@@ -25,10 +25,17 @@ int main(void)
     int years = 0;
         do
         {
-            int born = new_population / 3;
-            int died = new_population / 4;
-            new_population = new_population + born - died;
-            years = years + 1;
+            if (target_population > start_population)
+            {
+                int born = new_population / 3;
+                int died = new_population / 4;
+                new_population = new_population + born - died;
+                years = years + 1;
+            }
+            else
+            {
+                break;
+            }
         }
         while (new_population < target_population);
 
