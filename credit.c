@@ -105,15 +105,15 @@ int main(void)
     // check card bin for amex, master or visa
     int bin = get_card_bin(card);
     string card_type;
-    if (bin == 3)
+    if (bin == 3 && get_int_len(card) == 15)
     {
         card_type = "AMEX";
     }
-    else if (bin == 5)
+    else if (bin == 5 && get_int_len(card) != 15)
     {
         card_type = "MASTERCARD";
     }
-    else if (bin == 4)
+    else if (bin == 4 && get_int_len(card) != 15)
     {
         card_type = "VISA";
     }
