@@ -19,6 +19,14 @@ int get_int_len(long value)
 int get_card_bin(long value)
 {
     int bin;
+    if (get_int_len(value) == 13)
+    {
+        bin = value / 1000000000000;
+    }
+    if (get_int_len(value) == 14)
+    {
+        bin = value / 10000000000000;
+    }
     if (get_int_len(value) == 15)
     {
         bin = value / 100000000000000;
