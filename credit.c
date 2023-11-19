@@ -96,7 +96,7 @@ int main(void)
         card = get_long("Number: ");
     }
     // check length of card
-    while (get_int_len(card) > 7);
+    while (get_int_len(card) < 7);
 
     // checksum1 check sum of 2 * alternate numbers
 
