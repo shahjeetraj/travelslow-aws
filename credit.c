@@ -16,26 +16,28 @@ int get_int_len(long value)
 }
 
 //function to get the first 2 numbers of the card
-int get_card_bin(long value)
+void get_card_bin(long value, int *bin, int *bin2)
 {
-    int bin;
     if (get_int_len(value) == 13)
     {
-        bin = value / 1000000000000;
+        *bin = value / 1000000000000;
+        *bin2 = value / 100000000000;
     }
     if (get_int_len(value) == 14)
     {
-        bin = value / 10000000000000;
+        *bin = value / 10000000000000;
+        *bin2 = value / 1000000000000;
     }
     if (get_int_len(value) == 15)
     {
-        bin = value / 100000000000000;
+        *bin = value / 100000000000000;
+        *bin2 = value / 10000000000000;
     }
     if (get_int_len(value) == 16)
     {
-        bin = value / 1000000000000000;
+        *bin = value / 1000000000000000;
+        *bin2 = value / 100000000000000;
     }
-    return bin;
 }
 
 bool checksum(long value)
@@ -103,13 +105,15 @@ int main(void)
     bool cs = checksum(card);
 
     // check card bin for amex, master or visa
-    int bin = get_card_bin(card);
+    int bin;
+    int bin2;
+    get_card_bin(card, &bin, &bin2);
     string card_type;
-    if (bin == 3 && get_int_len(card) == 15)
+    if (bin == 3 && (bin2 == 34 || bin2 == 37) && get_int_len(card) == 15)
     {
         card_type = "AMEX";
     }
-    else if (bin == 5 && get_int_len(card) != 15)
+    else if (bin == 5 && (bin2 == 51 || bin2 == 52 || bin2 == 53 || bin2 == 54 || bin2 == 55) && get_int_len(card) != 15)
     {
         card_type = "MASTERCARD";
     }
