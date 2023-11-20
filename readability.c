@@ -7,14 +7,16 @@ void global_count(string text, int *letters, int *words, int *sentences);
 
 int main(void)
 {
+    // ask for text from user
     string text = get_string("Text: ");
     int letters;
     int words;
     int sentences;
     global_count(text, &letters, &words, &sentences);
-    //printf("%i letters\n%i words \n%i sentences\n", letters, words, sentences);
+    // calculation
     float l = (float) letters / (float) words * 100;
     float s = (float) sentences / (float) words * 100;
+    // final grading
     int index = round(0.0588 * l - 0.296 * s - 15.8);
     if (index < 1)
     {
@@ -30,6 +32,7 @@ int main(void)
     }
 }
 
+// single function to calculate everything at once.
 void global_count(string text, int *letters, int *words, int *sentences)
 {
     int a = 0;
