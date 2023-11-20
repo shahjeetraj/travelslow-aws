@@ -129,11 +129,11 @@ int compute_score(string word)
         {
             score += POINTS[20];
         }
-        else if (word[i] == 'V' || word[i] == 'V')
+        else if (word[i] == 'v' || word[i] == 'V')
         {
             score += POINTS[21];
         }
-        else if (word[i] == 'W' || word[i] == 'W')
+        else if (word[i] == 'w' || word[i] == 'W')
         {
             score += POINTS[22];
         }
@@ -141,7 +141,7 @@ int compute_score(string word)
         {
             score += POINTS[23];
         }
-        else if (word[i] == 'y' || word[i] == 'y')
+        else if (word[i] == 'y' || word[i] == 'Y')
         {
             score += POINTS[24];
         }
