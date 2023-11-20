@@ -6,7 +6,6 @@
 #include <cs50.h>
 #include <stdio.h>
 
-bool checkuppercase(string password);
 bool valid(string password);
 
 int main(void)
@@ -30,30 +29,29 @@ bool valid(string password)
     int lower = 0;
     int number = 0;
     int symbol = 0;
-    for (int i = 0; i < 999; i++)
+    for (int i = 0; i < 100; i++)
     {
         if (isupper(password[i]))
         {
             upper++;
         }
-        if (islower(password[i]))
+        else if (islower(password[i]))
         {
             lower++;
         }
-        if (isdigit(password[i]))
+        else if (isdigit(password[i]))
         {
             number++;
         }
-        if (ispunct(password[i]))
+        else if (ispunct(password[i]))
         {
             symbol++;
         }
-        if (upper >= 1 && lower >= 1 && number >= 1 && symbol >= 1)
+        else if (upper >= 1 && lower >= 1 && number >= 1 && symbol >= 1)
         {
             break;
         }
-        int isspace = password[i];
-        if ( isspace == 0)
+        else if (isspace(password[i]))
         {
             break;
         }
@@ -68,6 +66,7 @@ bool valid(string password)
     }
     else
     {
+        printf("lower %i upper %i number%i symbol%i\n", lower, upper, number, symbol);
         return false;
     }
 }
