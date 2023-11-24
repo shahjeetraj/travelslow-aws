@@ -50,7 +50,7 @@
     <p id="searchMessage">{{ message }}</p>
 </div>
 <div>
-    <div id="img-results-top-track" class="container px-4 d-flex white-space: nowrap; overflow: auto;" data-srch-id="{{ searchGroup.id }}" style="height: 65vh;">
+    <div id="img-results-top-track" class="container px-4 d-flex" data-srch-id="{{ searchGroup.id }}" style="height: 55vh;">
         <figure>
             <img class="img-results-top" id="img-result-1" src="{% static 'destinations/giphy.gif' %}">
             <figcaption id="fig1">Tranquil</figcaption>
@@ -72,11 +72,33 @@
             <figcaption id="fig5">Peaceful</figcaption>
         </figure>
     </div>
-    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center mb-5">
+    <div id="img-results-more-track" class="container px-4 d-flex hideShow" data-srch-id="{{ searchGroup.id }}">
+        <figure class="hideShow">
+            <img class="img-results-more hideShow" id="img-result-more-1" src="{% static 'destinations/giphy.gif' %}">
+            <figcaption class="hideShow" id="figMore1">Tranquil</figcaption>
+        </figure>
+        <figure class="hideShow">
+            <img class="img-results-more hideShow" id="img-result-more-2" src="{% static 'destinations/giphy.gif' %}">
+            <figcaption class="hideShow" id="figMore2">Serene</figcaption>
+        </figure>
+        <figure class="hideShow">
+            <img class="img-results-more hideShow" id="img-result-more-3" src="{% static 'destinations/giphy.gif' %}">
+            <figcaption class="hideShow" id="figMore3">Idyllic</figcaption>
+        </figure class="hideShow">
+        <figure class="hideShow">
+            <img class="img-results-more hideShow" id="img-result-more-4" src="{% static 'destinations/giphy.gif' %}">
+            <figcaption class="hideShow" id="figMore4">Relaxed</figcaption>
+        </figure>
+        <figure class="hideShow">
+            <img class="img-results-more hideShow" id="img-result-more-5" src="{% static 'destinations/giphy.gif' %}">
+            <figcaption class="hideShow" id="figMore5">Peaceful</figcaption>
+        </figure>
+    </div>
+    <div class="d-flex gap-3 d-sm-flex justify-content-center mb-5">
         <button type="button" data-bs-toggle="modal" data-bs-target="#modifyPopUp" id="modifySearch" class="searchPgBtn btn btn-outline-dark btn-lg px-2" disabled>Modify Criteria</button>
         <button type="button" data-bs-toggle="modal" data-bs-target="#modifyPopUp" id="modifySearchMobile" class="searchPgBtn btn btn-outline-dark btn-lg px-2" disabled><i class="bi bi-sliders2-vertical"></i></button>
-        <!-- <a type="button" href="{% url 'viewMore' id=searchGroup.id %}" id="viewMore" class="searchPgBtn btn btn-dark btn-lg px-4" disabled>View More</a> -->
-        <!-- <a type="button" href="{% url 'viewMore' id=searchGroup.id %}" id="viewMore" class="searchPgBtn btn btn-dark btn-lg px-4" disabled><i class="bi bi-fast-forward"></i></a> -->
+        <button type="button" id="viewMore" class="searchPgBtn btn btn-dark btn-lg px-4" disabled>View More</button>
+        <button type="button" id="viewMoreMobile" class="searchPgBtn btn btn-dark btn-lg px-4" disabled><i class="bi bi-fast-forward"></i></button>
     </div>
 </div>
 

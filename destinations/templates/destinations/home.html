@@ -183,7 +183,7 @@
     <div class="row">
         {% for destination in destinations %}
         <div class="coldes"></div>
-        <div class="coldes dest-image anime1" onclick="viewDest('{{ destination.destination_name }}')" style="cursor: pointer; background-image:url('{{ destination.destination_imageURL }}')">
+        <div class="coldes dest-image anime1" onclick="viewDest('{{ destination.destination_name|safe }}')" style="cursor: pointer; background-image:url('{{ destination.destination_imageURL }}')">
             <div class="center-img-text">
                 <p>{{ destination.destination_name }}, {{ destination.destination_country }}</p>
             </div>

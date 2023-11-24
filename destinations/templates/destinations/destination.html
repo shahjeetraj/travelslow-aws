@@ -23,8 +23,53 @@
         <div class="dest-col-img" style="background-image: url('{{ destDetails.destination_imageURL_6 }}');"></div>
     </div>
 </div>
-<div class="justify-content-center mb-5">
-    <button style="width: 65px;" type="button" onclick="history.back()" class="btn btn-outline-dark">Back</button>
+<div class="mx-auto gap-1 row mb-5">
+    <button style="width: 65px;" type="button" onclick="history.back()" id="back" class="btn btn-outline-dark">Back</button>
+    <button style="width: 65px;" type="button" onclick="history.back()" id="backMobile" class="btn btn-outline-dark"><i class="bi bi-caret-left-fill"></i></button>
+    {% if user.is_authenticated %}
+    <button style="width: 65px;" type="button" data-dest-id="{{ destDetails.pk }}" id="toggleLike" class="btn btn-dark">{% if liked %}Liked{% else %}Like{% endif %}</button>
+    <button style="width: 65px;" type="button" data-dest-id="{{ destDetails.pk }}" id="toggleLikeMobile" class="btn btn-dark">{% if liked %}<i class="bi bi-hand-thumbs-down-fill"></i>{% else %}<i class="bi bi-hand-thumbs-up-fill"></i>{% endif %}</button>
+    {% else %}
+    <button style="width: 65px;" type="button" data-dest-id="{{ destDetails.pk }}" id="toggleLike" class="btn btn-dark" disabled>Like</button>
+    <button style="width: 65px;" type="button" data-dest-id="{{ destDetails.pk }}" id="toggleLikeMobile" class="btn btn-dark" disabled><i class="bi bi-hand-thumbs-up-fill"></i></button>
+    {% endif %}
+    <button style="width: 65px;" type="button" id="destLikesCount" class="btn btn-light"><i style="color: red;" class="bi bi-suit-heart-fill"></i> {{ likes }}</button>
 </div>
+
+<script>
+    const likeBtn = document.getElementById("toggleLike");
+    likeBtn.addEventListener("click",toggleLike);
+    const likeBtnMobile = document.getElementById("toggleLikeMobile");
+    likeBtnMobile.addEventListener("click",toggleLike);
+    function toggleLike(){
+        const id = likeBtn.getAttribute("data-dest-id");
+        let likeText = likeBtn.innerText;
+        let likeCount = document.getElementById("destLikesCount");
+        const whetherLiked = likeText == "Like" ? false : true;
+        if (whetherLiked){
+            fetch(`/unlike/${id}`)
+            .then(response => response.json())
+            .then(result => {
+                    if (result !== undefined) { 
+                        console.log(result.likes);
+                        likeBtn.innerText = "Like";
+                        likeBtnMobile.innerHTML = '<i class="bi bi-hand-thumbs-up-fill"></i>';
+                        likeCount.innerHTML = `<i style="color: red;" class="bi bi-suit-heart-fill"></i> ${result.likes}`;
+                    }
+                })
+        } else {
+            fetch(`/like/${id}`)
+            .then(response => response.json())
+            .then(result => {
+                    if (result !== undefined) { 
+                        console.log(result.likes);
+                        likeBtn.innerText = "Liked";
+                        likeBtnMobile.innerHTML = '<i class="bi bi-hand-thumbs-down-fill"></i>';
+                        likeCount.innerHTML = `<i style="color: red;" class="bi bi-suit-heart-fill"></i> ${result.likes}`;
+                    }
+                })
+        }
+    }
+</script>
 
 {% endblock %}

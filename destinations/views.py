@@ -5,9 +5,11 @@ import openai
 from django.contrib import messages
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import AnonymousUser
 from django.db import IntegrityError
 from django.urls import reverse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from asgiref.sync import async_to_sync, sync_to_async
 from django.core.mail import BadHeaderError, send_mail
@@ -103,18 +105,10 @@ def explore(request):
     else:
         searchGroup = Search(search_theme="", search_destination="", search_custom_query="", search_user=search_user)
     searchGroup.save()
-    message = "Please wait while we search the best destinations for you."
+    message = "Please allow a minute for AI to render The Best Destinations.."
     return render(request, "destinations/search.html", {
         "searchGroup" : searchGroup,
         "message": message
-    })
-
-def viewMore(request, id):
-    searchGroup = Search.objects.get(pk=id)
-    message = "Please wait while we search more destinations for you."
-    return render(request, "destinations/search.html",{
-        "searchGroup" : searchGroup,
-        "message" : message
     })
 
 async def destSearch(request, id):
@@ -126,7 +120,7 @@ async def destSearch(request, id):
         separator = ', '
         searchMessage = separator.join(temp_expr)
         completion = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4",
             messages=[
                 {"role": "system", "content": "You are a helpful travel assistant, who will search the internet for 5 holiday destinations that are less crowded and make sure that the same destination is not repeated every time a similar search is made. The response should be in JSON with array called 'destinations' and fields with headers 'destination_name', 'destination_country' and 'destination_information. The field destination_name not to contain country name, it should either be a city, state or area."},
                 {"role": "user", "content": ("Please provide destinations ideal for " + searchMessage)}
@@ -134,7 +128,7 @@ async def destSearch(request, id):
             )
     else:
         completion = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4",
             messages=[
                 {"role": "system", "content": "You are a helpful travel assistant, who will search the internet for 5 holiday destinations that are less crowded and make sure that the same destination is not repeated every time a similar search is made. The response should be in JSON with array called 'destinations' and fields with headers 'destination_name', 'destination_country' and 'destination_information. The field destination_name not to contain country name, it should either be a city, state or area."},
                 {"role": "user", "content": "Please provide 5 random destinations which are not crowded"}
@@ -225,12 +219,13 @@ def save_dest_item(parsedData):
 
 async def saveDest(parsedCompletion):
     try:
-        destidList=[]
         for i in range(len(parsedCompletion["destinations"])):
             destination_name=parsedCompletion["destinations"][i]["destination_name"]
             if "," in destination_name:
                 destination_name_split = destination_name.split(", ")
                 destination_name = destination_name_split[0]
+            if "'" in destination_name:
+                destination_name = destination_name.replace("'","")
             destination_country=parsedCompletion["destinations"][i]["destination_country"]
             destination_info=parsedCompletion["destinations"][i]["destination_information"]
             destination_searchID=parsedCompletion["destination_searchID"]
@@ -308,10 +303,21 @@ def beta(request):
 def destView(request, destination_name):
     dest = Destination.objects.filter(destination_name=destination_name)
     destForPage = dest.latest('destination_searchID')
-    return render(request, "destinations/destination.html",{
-        "destDetails": destForPage
+    likes = Like.objects.filter(likeDestination=destForPage).count()
+
+    if isinstance(request.user, AnonymousUser):
+        # User is not logged in
+        liked = False
+    else:
+        # User is logged in
+        liked = Like.objects.filter(likeDestination=destForPage, likeUser=request.user).exists()
+
+    return render(request, "destinations/destination.html", {
+        "destDetails": destForPage,
+        "likes": likes,
+        "liked": liked
     })
-    
+
 async def singleImageSearch(request, destination_name):
     try:
         # Replace 'YOUR_UNSPLASH_API_KEY' with your actual Unsplash API key
@@ -422,3 +428,33 @@ def subscribe(request):
         subscribe_model_instance.save()
         messages.success(request, f'{email} email was successfully subscribed to our newsletter!')
         return redirect(request.META.get("HTTP_REFERER", "/"))
+
+@login_required
+def like(request, id):
+    liked_destination = Destination.objects.get(pk=id)
+    liked_user = request.user
+    like_model_instance = Like()
+    like_model_instance.likeDestination = liked_destination
+    like_model_instance.likeUser = liked_user
+    like_model_instance.save()
+    likes = liked_destination.destination_likes
+    likes = len(Like.objects.filter(likeDestination=liked_destination))
+    if Like.objects.filter(likeDestination=liked_destination,likeUser=request.user):
+        liked = True
+    else:
+        liked = False
+    return JsonResponse({"likes": likes, "liked": liked}, status=201)
+    
+@login_required
+def unlike(request, id):
+    liked_destination = Destination.objects.get(pk=id)
+    liked_user = request.user
+    like_model_instance = Like.objects.get(likeDestination = liked_destination, likeUser = liked_user)
+    like_model_instance.delete()
+    likes = liked_destination.destination_likes
+    likes = len(Like.objects.filter(likeDestination=liked_destination))
+    if Like.objects.filter(likeDestination=liked_destination,likeUser=request.user):
+        liked = True
+    else:
+        liked = False
+    return JsonResponse({"likes": likes, "liked": liked}, status=201)

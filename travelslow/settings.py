@@ -12,6 +12,12 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+from environ import Env
+
+env = Env()
+Env.read_env()
+
+ENVIRONMENT = env('ENVIRONMENT', default='prod')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,16 +27,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-2i#(16_i&r_y(&p0a(pns4si(9&_!g&k123h_$o!kq3)ouv4vo'
+SECRET_KEY = env('SECRET_KEY')
 
-OPENAI_API_KEY = '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'
+OPENAI_API_KEY = env('OPENAI_API_KEY')
 
-YOUR_GOOGLE_API_KEY = 'AIzaSyAfNi0xBCjBa0B-Tpac3VsXF0ZHEg4WTcQ'
+YOUR_GOOGLE_API_KEY = env('YOUR_GOOGLE_API_KEY')
 
-YOUR_UNSPLASH_API_KEY = 'nCP27qRTGDaXADCIcVDOB60aeOF-wINLUIMSSj1qkWA'
+YOUR_UNSPLASH_API_KEY = env('YOUR_UNSPLASH_API_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if ENVIRONMENT == 'dev':
+    DEBUG = True
+else:
+    DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -44,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'admin_honeypot',
     'django.contrib.staticfiles',
 ]
 
@@ -134,9 +144,9 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = "travelslow2023@gmail.com"
-EMAIL_HOST_PASSWORD = "soxb gkjy eofr bdui"
+EMAIL_BACKEND = env('EMAIL_BACKEND')
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_USE_TLS = env('EMAIL_USE_TLS')
+EMAIL_PORT = env('EMAIL_PORT')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
