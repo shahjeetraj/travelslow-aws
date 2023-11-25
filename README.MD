@@ -78,7 +78,7 @@ The static logo and other images, javascript and css files are located in this f
 #### HTML5, JavaScript, CSS3
 
 ## Integrations
-### Open AI API - GPT 3.5 Turbo (for getting destinations as per search criteria)
+### Open AI API - GPT 4 (for getting destinations as per search criteria)
 ### Unplash Search API (for getting destination images)
 
 ## Screenshots
