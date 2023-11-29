@@ -1,0 +1,37 @@
+{% extends "destinations/layout.html" %}
+
+{% block title %}Travel Slow: About Me, Travel Slow and the future !{% endblock %}
+
+{% block body %}
+{% load static %}
+
+<div style="padding: 10px; text-justify: distribute;">
+    <img src="{% static 'destinations/jeet.png' %}" alt="jeet-profile-pic" style="border-radius: 50%; height: 170px;">
+    <h2>Hi there,</h2>
+    <h5 class="fw-bold text-start">About Me</h5>
+    <p class="text-start">I am Jeetraj Shah from Mumbai, India. In my career I have tried many things like Business Analysis, Project
+        Management and a bit of Product Management. My interests include Travel, eCommerce and Technology which has made
+        me go on this incredible journey. </p>
+    <h5 class="fw-bold text-start">About Travel Slow</h5>
+    <p class="text-start">Travel Slow is a project close to my heart, that I was always thinking, planning or ranting about. But finally I decided
+        to build it as my final submission for the Harvard CS50's Web Programming Course. This is a concept in travel
+        that helps users to plan their travel to places which match their actual dreams or wishes rather than blindly
+        follow whatever is pushed to them. People rarely know what is available out there in world. So a city or
+        destination search using name of the destination is rarely helpful. Also we see that majority of the travel
+        destinations are trend based. Hence the problems of bad experiences for the visitors, hosts and people involved
+        in the business.</p>
+    <p class="text-start">We aim to provide a unique set of destinations that are not too crowded, meet traveller expectations and are
+        beautiful at the same time.</p>
+    <h5 class="fw-bold text-start">The Future</h5>
+    <p class="text-start">I will keep building this project further, in a worst case scenario - as a one man company. My future plans include (but
+        not limited to):</p>
+    <ul class="text-start">
+        <li>Improve the AI Model further and reduce dependency on Open AI API</li>
+        <li>Integration with Hotel or Apartment Suppliers</li>
+        <li>Integration with Flights</li>
+        <li>Integration with Ground Transport (Self Drive, Transfers and other options)</li>
+        <li>Integration with Activity Suppliers</li>
+    </ul>
+    <p class="text-start">So, go ahead and sign up for the Beta^ phase. You will get early access to exciting features.</p>
+</div>
+{% endblock %}
