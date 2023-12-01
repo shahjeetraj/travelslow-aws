@@ -12,7 +12,12 @@ async function destSearch() {
                 // Update value in div
                 try {
                     const cap = document.getElementById("fig" + cnt);
-                    cap.innerHTML = destination.destination_name;
+                    if (destination.destination_name.includes("'")) {
+                        let dName = destination.destination_name.replace("'","");
+                        cap.innerHTML = dName;
+                    } else {
+                        cap.innerHTML = destination.destination_name;
+                    }
                     const figid = document.getElementById("img-result-" + cnt);
                     figid.id = destination.destination_name;
                     cnt++;
@@ -84,7 +89,12 @@ async function viewMoreDestSearch() {
                 // Update value in div
                 try {
                     const cap1 = document.getElementById("figMore" + cnt);
-                    cap1.innerHTML = destination.destination_name;
+                    if (destination.destination_name.includes("'")) {
+                        let dName = destination.destination_name.replace("'","");
+                        cap1.innerHTML = dName;
+                    } else {
+                        cap1.innerHTML = destination.destination_name;
+                    }
                     const figid1 = document.getElementById("img-result-more-" + cnt);
                     figid1.id = destination.destination_name;
                     cnt++;
