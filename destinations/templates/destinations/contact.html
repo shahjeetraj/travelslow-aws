@@ -1,0 +1,52 @@
+{% extends "destinations/layout.html" %}
+
+{% block title %}Travel Slow: Let us know !{% endblock %}
+
+{% block body %}
+
+<div class="bg-dark text-secondary px-4 text-center">
+    <div class="py-2">
+      <h1 class="display-5 fw-bold text-white" style="font-family: 'Poppins', sans-serif;">Contact me</h1>
+      <div class="col-lg-6 mx-auto">
+        <p class="fs-5 mb-4">Get in Touch with me.<br> It could be for appreciating my effort,<br>congratulating me for my success,<br>or just giving your constructive feedback.<br>Also, you could want to partner with me<br>to build something great,<br>want my expert opinion on something<br>or just give me a suggestion on how to improve.<br>In any case contact me by clicking on below buttons:</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+          <a type="button" target="_blank" href="https://www.linkedin.com/in/shahjeetraj/" class="btn btn-info btn-lg px-4 me-sm-3 fw-bold">Linkedin</a>
+          <button type="button" class="btn btn-light btn-lg px-4" data-bs-toggle="modal" data-bs-target="#contactModal" data-bs-whatever="{% if user.is_authenticated %} {{ user.username }} {% else %} @anonymous {% endif %}">Email me</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form action="{% url 'send_email' %}" method="post">
+      {% csrf_token %}
+      <div class="modal-content text-start" style="border-radius: 0px;">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5" id="exampleModalLabel">New message</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Sender:</label>
+            <input type="text" class="form-control" id="sender-name" name="sender" value="{% if user.is_authenticated %}@{{ user.username }} {% else %} @anonymous {% endif %}">
+          </div>
+          <div class="mb-3">
+            <label for="subject" class="col-form-label">Subject:</label>
+            <input type="text" class="form-control" name="subject" id="subject">
+          </div>
+          <div class="mb-3">
+            <label for="message-text" class="col-form-label">Message:</label>
+            <textarea class="form-control" id="message-text" rows="5" name="message"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-dark">Send message</button>
+        </div>
+    </form>
+  </div>
+</div>
+</div>
+
+{% endblock %}
