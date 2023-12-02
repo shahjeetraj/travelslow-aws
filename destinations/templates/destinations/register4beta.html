@@ -1,0 +1,82 @@
+{% extends "destinations/layout.html" %}
+{% load static %}
+
+{% block title %}Travel Slow: Register for a Beta Release !{% endblock %}
+
+{% block body %}
+{% if user.is_authenticated %}
+<div class="px-4 py-5 my-5 text-center">
+  <img class="d-block mx-auto mb-4" src="{% static 'destinations/AltLogo.png' %}" alt="logo alternate" width="125" height="125">
+  <h2 class="display-5 fw-bold">Awesome</h2>
+  <div class="col-lg-6 mx-auto">
+    <p class="lead mb-4">Thanks for Signing up. We have something amazing in store for you.</p>
+  </div>
+</div>
+{% else %}
+<div class="container col-xl-10 col-xxl-10 px-4 py-3">
+  <div class="row align-items-center g-lg-5 py-5">
+    <div class="col-lg-7 text-center text-lg-start">
+      <h2 class="display-5 fw-bold lh-1 mb-3" style="font-family: 'Poppins', sans-serif;">Sign up for upcoming Beta<sup>^</sup> Release</h2>
+      <p class="col-lg-10 fs-4">Hey there, something exciting is coming up. It is going to be member only feature, so don't forget to register!</p>
+      <p class="col-lg-10 fs-7"><em>We will not email you unnecessarily, even to welcome you. So Please Register!</em></p>
+    </div>
+    <div class="col-md-10 mx-auto col-lg-5">
+      <form class="p-4 p-md-5 border rounded-3 bg-light" id="formSign" action="{% url 'register' %}" method="post">
+       {% csrf_token %}
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" id="username" name="username" placeholder="User Name" required>
+          <label for="username">User Name</label>
+        </div>
+        <div class="form-floating mb-3" id="email-div">
+          <input type="email" class="form-control" id="emailid" name="emailid" placeholder="Email address" required>
+          <label for="emailid">Email address</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password" required>
+          <label for="floatingPassword">Password</label>
+        </div>
+        <div class="checkbox mb-3">
+          <label>
+            <input type="checkbox" value="remember-me" checked disabled> Remember me
+          </label>
+        </div>
+        <button class="w-100 btn btn-lg btn-dark" id="submitBtn" type="submit">Sign up</button>
+        <hr class="my-4">
+        <small class="text-muted">By signing up, you agree to the <a href=""><u>terms</u></a></small>
+        <small class="text-muted text-sm" id="poggle">Already Registered? <a href="javascript:sign_in_page()"><u>Sign in</u></a></small>
+      </form>
+    </div>
+  </div>
+</div>
+{% endif %}
+<script>
+  function sign_in_page() {
+	  let emailiddiv = document.getElementById("email-div");
+    emailiddiv.style.display = "none";
+    let emailid = document.getElementById("emailid")
+    emailid.removeAttribute('required');
+    let button = document.getElementById("submitBtn");
+    button.innerHTML = 'Sign in';
+    let toggle_text = document.getElementById("poggle");
+	  toggle_text.innerHTML = "Unable to Sign in? <a href='javascript:sign_up_page()'><u>Sign up</u></a>";
+    let form_action = document.getElementById("formSign");
+    form_action.action = "{% url 'login' %}";
+
+  }
+  function sign_up_page() {
+  	let emailiddiv = document.getElementById("email-div");
+    emailiddiv.style.display = "block";
+    let emailid = document.getElementById("emailid")
+    emailid.setAttribute('required', '');
+    let button = document.getElementById("submitBtn");
+    button.innerHTML = 'Sign up';
+    let toggle_text = document.getElementById("poggle");
+	  toggle_text.innerHTML = "Already Registered? <a href='javascript:sign_in_page()'><u>Sign in</u></a>";
+    let form_action = document.getElementById("formSign");
+    form_action.action = "{% url 'register' %}";
+  }
+  
+
+</script>
+
+{% endblock %}
