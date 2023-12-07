@@ -51,6 +51,7 @@
             {% if user.is_authenticated %}
             <li class="nav-link px-3 link-dark"><span style="border-radius: 0;" class="badge text-bg-dark">{{ user.username }}</span></li>
             {% endif %}
+            <li class="nav-link px-3 link-dark"><a href="{% url 'homenew' %}">Home</a></li>
             <li class="nav-link px-3 link-dark"><a href="{% url 'about' %}">About</a></li>
             <li class="nav-link px-3 link-dark"><a href="{% url 'beta' %}">Beta<sup>^</sup></a></li>
             <li class="nav-link px-3 link-dark"><a href="{% url 'contact' %}">Contact</a></li>

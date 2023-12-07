@@ -2,7 +2,7 @@ async function destSearch() {
     try {
         let id = document.getElementById("img-results-top-track").getAttribute("data-srch-id");
         
-        const response = await fetch(`destSearch/${id}`)
+        const response = fetch(`/destSearch/${id}`)
         .then(response => response.json())
         .then(destinations => {
             // Print Log for the email data
@@ -79,7 +79,7 @@ async function viewMoreDestSearch() {
     sm.style.display = "block";
     try {
         let id = document.getElementById("img-results-more-track").getAttribute("data-srch-id");
-        const response = await fetch(`destSearch/${id}`)
+        const response = fetch(`/destSearch/${id}`)
         .then(response => response.json())
         .then(destinations => {
             // Print Log for the email data

@@ -27,6 +27,12 @@ def home(request):
     return render(request, "destinations/home.html", {
         "destinations" : destinations
     })
+    
+def homenew(request):
+    destinations = Destination.objects.order_by('destination_searchID').reverse()[:14]
+    return render(request, "destinations/homenew.html", {
+        "destinations" : destinations
+    })
 
 @require_POST
 def search(request):
@@ -94,7 +100,132 @@ def search(request):
         "searchGroup" : searchGroup,
         "message" : message
     })
+
+@require_POST
+def searchnew(request):
+    searchList = []
+
+    searchVal1 = request.POST.get('adventure')
+    if searchVal1 != None:
+        searchList.append(searchVal1)
+    searchVal2 = request.POST.get('beach')
+    if searchVal2 != None:
+        searchList.append(searchVal2)
+    searchVal3 = request.POST.get('history')
+    if searchVal3 != None:
+        searchList.append(searchVal3)
+    searchVal4 = request.POST.get('culture')
+    if searchVal4 != None:
+        searchList.append(searchVal4)
+    searchVal5 = request.POST.get('island')
+    if searchVal5 != None:
+        searchList.append(searchVal5)
+    searchVal6 = request.POST.get('road')
+    if searchVal6 != None:
+        searchList.append(searchVal6)
+    searchVal7 = request.POST.get('luxury')
+    if searchVal7 != None:
+        searchList.append(searchVal7)
+    searchVal8 = request.POST.get('cruise')
+    if searchVal8 != None:
+        searchList.append(searchVal8)
+    searchVal9 = request.POST.get('community')
+    if searchVal9 != None:
+        searchList.append(searchVal9)
+    if len(searchList) != 0:
+        search_theme = searchList
+    else:
+        search_theme = None
+    searchVal10 = request.POST.get('dreamText')
+    if searchVal10 != None:
+        search_custom_query = searchVal10
+    else:
+        search_custom_query = None
+    searchVal11 = request.POST.get('countryList')
+    if searchVal11 != None:
+        search_destination = searchVal11
+    else:
+        search_destination = None
+    if not request.user.is_authenticated:
+        search_user = None
+        
+    else:
+        search_user = request.user
+        
+
+    if search_theme == None and search_destination == None and search_custom_query == None:
+        message = "No search terms provided."
+    else:
+        if search_user == None:
+            searchGroup = Search(search_theme=search_theme, search_destination=search_destination, search_custom_query=search_custom_query)
+        else:
+            searchGroup = Search(search_theme=search_theme, search_destination=search_destination, search_custom_query=search_custom_query, search_user=search_user)
+        searchGroup.save()
     
+    searchList = [searchGroup.search_theme, searchGroup.search_destination, searchGroup.search_custom_query]
+    openai.api_key = settings.OPENAI_API_KEY
+    if len(searchList) != 0:
+        temp_expr = (str(item) for item in searchList)
+        separator = ', '
+        searchMessage = separator.join(temp_expr)
+    completion = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are a helpful travel assistant, who will search the internet for 5 holiday destinations that are less crowded and make sure that the same destination is not repeated every time a similar search is made. The response should be in JSON with array called 'destinations' and fields with headers 'destination_name', 'destination_country' and 'destination_information. The field destination_name not to contain country name, it should either be a city, state or area."},
+            {"role": "user", "content": ("Please provide destinations ideal for " + searchMessage)}
+            ]
+        )
+    print(messages)
+    # parse completion:
+    parsedCompletion = json.loads(completion['choices'][0]['message']['content'])
+    parsedCompletion["destination_searchID"] = searchGroup.pk
+    print(parsedCompletion)
+    # Create a list of tasks to save destinations and fetch images
+    destList = saveDest(parsedCompletion)
+    
+    return render(request, "destinations/searchnew.html", {
+        "searchGroup" : searchGroup,
+        "destList" : destList
+    })
+
+
+def searchSave(request):
+    try:
+        if not request.user.is_authenticated:
+            search_user = None
+        else:
+            search_user = request.user
+            searchGroup = Search(search_theme="", search_destination="", search_custom_query="", search_user=search_user)
+        if search_user == None:
+            searchGroup = Search(search_theme="", search_destination="", search_custom_query="")
+        searchGroup.save()
+    except Exception as e:
+        print(e)
+    return searchGroup
+
+def explorenew(request):
+    searchGroup = searchSave(request)
+    openai.api_key = settings.OPENAI_API_KEY
+    completion = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are a helpful travel assistant, who will search the internet for 5 holiday destinations that are less crowded and make sure that the same destination is not repeated every time a similar search is made. The response should be in JSON with array called 'destinations' and fields with headers 'destination_name', 'destination_country' and 'destination_information. The field destination_name not to contain country name, it should either be a city, state or area."},
+            {"role": "user", "content": "Please provide 5 random destinations which are not crowded"}
+            ]
+        )
+    
+    # parse completion:
+    parsedCompletion = json.loads(completion['choices'][0]['message']['content'])
+    parsedCompletion["destination_searchID"] = searchGroup.pk
+    print(parsedCompletion)
+    # Create a list of tasks to save destinations and fetch images
+    destList = saveDest(parsedCompletion)
+    
+    return render(request, "destinations/searchnew.html", {
+        "searchGroup" : searchGroup,
+        "destList" : destList
+    })
+
 def explore(request):
     if not request.user.is_authenticated:
         search_user = None
@@ -148,7 +279,6 @@ async def destSearch(request, id):
 def get_search_item(id):
     return Search.objects.get(pk=id)
 
-@sync_to_async
 def save_dest_item(parsedData):
     destination_name = parsedData["destination_name"]
     destination_country = parsedData["destination_country"]
@@ -174,6 +304,7 @@ def save_dest_item(parsedData):
         )
     destAdd.save()
     print(f"{destination_name}, {destination_country} destination is added")
+    return destAdd
 
 
 # def destSearch(request, id):
@@ -217,8 +348,9 @@ def save_dest_item(parsedData):
 #     except Exception as e:
 #         return JsonResponse({"error": str(e)}, status=500)
 
-async def saveDest(parsedCompletion):
+def saveDest(parsedCompletion):
     try:
+        destList=[]
         for i in range(len(parsedCompletion["destinations"])):
             destination_name=parsedCompletion["destinations"][i]["destination_name"]
             if "," in destination_name:
@@ -237,7 +369,9 @@ async def saveDest(parsedCompletion):
                 print ("image urls saved successfully in parsedData")
             except Exception as e:
                 print(e)
-            await save_dest_item(parsedData)
+            destItem = save_dest_item(parsedData)
+            destList.append(destItem)
+        return destList
     except Exception as e:
         print(f"{e} not processed splitting destinations data")
         return JsonResponse({"error": str(e)}, status=500)
@@ -260,7 +394,6 @@ def imageSearch(destination_name):
 
         if unsplash_response.status_code == 200:
             images_data = unsplash_response.json()
-            print(images_data)
             image_URL_list = []
             if len(images_data["results"]) >= 6:
                 # Get only the image url and store in destination_imageURL
@@ -458,3 +591,17 @@ def unlike(request, id):
     else:
         liked = False
     return JsonResponse({"likes": likes, "liked": liked}, status=201)
+
+# SAVE SEARCH PARAMETERS
+
+# PASS SEARCH PARAMETERS TO OPEN API
+
+# PARSE RESPONSE
+
+# SPLIT DESTINATIONS
+
+# SEARCH IMAGES FOR DESTINATIONS
+
+# STORE DESTINATIONS AND IMAGES AND SAVE IN DB
+
+# RETURN DESTINATION IDS' GROUP TO SEARCH.HTML
