@@ -120,6 +120,14 @@ h1 {
   display: none;
 }
 
+.text-dt {
+  display: block;
+}
+
+.text-mb {
+  display: none;
+}
+
 #img-home-top-track > figure > .img-home-top {
   width: 20vmin;
   height: 28vmin;
@@ -134,7 +142,7 @@ h1 {
   object-position: center;
 }
 
-#img-results-top-track > figure > figcaption, #img-results-more-track > figure > figcaption, #img-results-top-track > figure > a > figcaption, #img-results-more-track > figure > a > figcaption {
+#img-results-top-track > figure > figcaption, #img-results-more-track > figure > figcaption, #img-results-top-track > figure > a > figcaption, #img-results-more-track > figure > figcaption {
   padding: 2px;
   text-align: center;
   min-height: 50px;
@@ -343,7 +351,7 @@ a {
     gap: 3rem;
     padding: 3rem;
   }
-  #img-results-top-track > figure > .img-results-top, #img-results-more-track > figure > .img-results-more {
+  #img-results-top-track > figure > a > .img-results-top, #img-results-more-track > figure > .img-results-more {
     width: 35vmin;
     height: 49vmin;
     object-fit:cover;
@@ -393,6 +401,15 @@ a {
   }
   #toggleLikeMobile {
     display: block;
+  }
+  .text-dt {
+    display: none;
+  }
+  .text-mb {
+    display: block;
+  }
+  .text-mb p {
+    font-size: 18px;
   }
   .colTheme {
     width: 100%;

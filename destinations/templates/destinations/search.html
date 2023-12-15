@@ -42,6 +42,17 @@
             checkbox.disabled = !activateCountry.checked;
         });
     }
+    
+    function exploreLoader() {
+        const eBtn = document.getElementById("viewMore");
+        const eBtnMobile = document.getElementById("viewMoreMobile");
+        eBtn.disabled = true;
+        eBtnMobile.disabled = true;
+        let loader1 = document.getElementById("loader-img");
+        let loader2 = document.getElementById("loader-overlay");
+        loader1.style.display = "block";
+        loader2.style.display = "block";
+    }
 </script>
 
 <h2 style="font-size: 30px;">Destinations for you</h2>
@@ -51,26 +62,12 @@
 </div>
 <div>
     <div id="img-results-top-track" class="container px-4 d-flex" data-srch-id="{{ searchGroup.id }}" style="height: 55vh;">
+        {% for dest in destList %}
         <figure>
-            <img class="img-results-top" id="img-result-1" src="{% static 'destinations/giphy.gif' %}">
-            <figcaption id="fig1">Tranquil</figcaption>
+            <a href="{% url 'destView' destination_name=dest.destination_name %}"><img class="img-results-top" id="img-result" src="{{ dest.destination_imageURL }}">
+            <figcaption id="fig1">{{ dest.destination_name }}</figcaption></a>
         </figure>
-        <figure>
-            <img class="img-results-top" id="img-result-2" src="{% static 'destinations/giphy.gif' %}">
-            <figcaption id="fig2">Serene</figcaption>
-        </figure>
-        <figure>
-            <img class="img-results-top" id="img-result-3" src="{% static 'destinations/giphy.gif' %}">
-            <figcaption id="fig3">Idyllic</figcaption>
-        </figure>
-        <figure>
-            <img class="img-results-top" id="img-result-4" src="{% static 'destinations/giphy.gif' %}">
-            <figcaption id="fig4">Relaxed</figcaption>
-        </figure>
-        <figure>
-            <img class="img-results-top" id="img-result-5" src="{% static 'destinations/giphy.gif' %}">
-            <figcaption id="fig5">Peaceful</figcaption>
-        </figure>
+        {% endfor %}
     </div>
     <div id="img-results-more-track" class="container px-4 d-flex hideShow" data-srch-id="{{ searchGroup.id }}">
         <figure class="hideShow">
@@ -95,11 +92,13 @@
         </figure>
     </div>
     <div class="d-flex gap-3 d-sm-flex justify-content-center mb-5">
-        <button type="button" data-bs-toggle="modal" data-bs-target="#modifyPopUp" id="modifySearch" class="searchPgBtn btn btn-outline-dark btn-lg px-2" disabled>Modify Criteria</button>
-        <button type="button" data-bs-toggle="modal" data-bs-target="#modifyPopUp" id="modifySearchMobile" class="searchPgBtn btn btn-outline-dark btn-lg px-2" disabled><i class="bi bi-sliders2-vertical"></i></button>
-        <button type="button" id="viewMore" class="searchPgBtn btn btn-dark btn-lg px-4" disabled>View More</button>
-        <button type="button" id="viewMoreMobile" class="searchPgBtn btn btn-dark btn-lg px-4" disabled><i class="bi bi-fast-forward"></i></button>
+        <button type="button" data-bs-toggle="modal" data-bs-target="#modifyPopUp" id="modifySearch" class="searchPgBtn btn btn-outline-dark btn-lg px-2">Modify Criteria</button>
+        <button type="button" data-bs-toggle="modal" data-bs-target="#modifyPopUp" id="modifySearchMobile" class="searchPgBtn btn btn-outline-dark btn-lg px-2"><i class="bi bi-sliders2-vertical"></i></button>
+        <button type="button" id="viewMore" class="searchPgBtn btn btn-dark btn-lg px-4">View More</button>
+        <button type="button" id="viewMoreMobile" class="searchPgBtn btn btn-dark btn-lg px-4"><i class="bi bi-fast-forward"></i></button>
     </div>
+    <div id="loader-overlay" class="overlay" style="height: 100%; width: 100%; position: fixed; display: none; z-index: 1; top: 0; left: 0; background-color: rgb(0,0,0); background-color: rgba(0,0,0, 0.6);"></div>
+    <img id="loader-img" style="height: 100px; position: fixed; left: 50%; top: 50%; display: none; transform: translate(-50%,-50%);" src="{% static '/destinations/spin.svg' %}">
 </div>
 
 <div id="modifyPopUp" class="modal modal-xl modal-fullscreen-sm-down" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -189,7 +188,7 @@
                             <input type="text" name="countryList" id="countryList" disabled style="width: 85%;">
                         </div>
                     </div>
-                    <input type="submit" class="btn btn-dark" value="Search">
+                    <input type="submit" onclick="return exploreLoader()" data-bs-dismiss="modal" class="btn btn-dark" value="Search">
                 </form>
             </div>
             <div class="modal-footer">

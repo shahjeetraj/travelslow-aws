@@ -4,14 +4,11 @@ from . import views
 
 urlpatterns = [
 path("", views.home, name="home"),
-path("homenew", views.homenew, name="homenew"),
 path("login", views.login_view, name="login"),
 path("logout", views.logout_view, name="logout"),
 path("register", views.register, name="register"),
 path("search", views.search, name="search"),
-path("searchnew", views.searchnew, name="searchnew"),
 path("explore", views.explore, name="explore"),
-path("explorenew", views.explorenew, name="explorenew"),
 path("destSearch/<int:id>", views.destSearch, name="destSearch"),
 path("imageSearch/<str:destination_name>", views.imageSearch, name="imageSearch"),
 path("singleImageSearch/<str:destination_name>", views.singleImageSearch, name="singleImageSearch"),

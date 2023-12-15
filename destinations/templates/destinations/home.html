@@ -1,4 +1,5 @@
 {% extends "destinations/layout.html" %}
+{% load static %}
 
 {% block title %}Travel Slow: We tell you "THE BEST DESTINATIONS" for your travels!{% endblock %}
 
@@ -41,20 +42,41 @@
         });
     }
 
-    function viewDest(destination_name) {
-    window.location.href = `/destView/${destination_name}`;
+    function exploreLoader() {
+        const eBtn = document.getElementById("exploreBtn");
+        const eBtnMobile = document.getElementById("exploreBtnMobile");
+        eBtn.disabled = true;
+        eBtnMobile.disabled = true;
+        let loader1 = document.getElementById("loader-img");
+        let loader2 = document.getElementById("loader-overlay");
+        loader1.style.display = "block";
+        loader2.style.display = "block";
     }
+
+    function viewDest(destination_name) {
+        window.location.href = `/destView/${destination_name}`;
+    }
+
 </script>
 
 <div style="background-image: url('/static/destinations/bg.png'); background-size: auto; background-repeat: no-repeat; background-position: top;"
     class="px-1 text-center border-bottom">
     <h1 class="mb-2">HOW WE TRAVEL</h1>
+    <h2 class="homeh2"><strong>NO CROWDS</strong></h2>
+    <div class="text-dt col-lg-6 mx-auto">
+        <p class="lead mb-4">Click on <strong><i>"Customize"</i></strong> to select a <strong>Theme</strong> you want to experiment with; or; Click on <strong><i>"Explore"</i></strong> to search for a random destination.</p>
+    </div>
+    <div class="text-mb col-lg-6 mx-auto">
+        <p class="lead mb-4">Click on <strong><i class="bi bi-sliders2-vertical"></i></strong> to select a <strong>Theme</strong> you want to experiment with; or; Click on <strong><i class="bi bi-send"></i></strong> to search for a random destination.</p>
+    </div>
+    <div id="loader-overlay" class="overlay" style="height: 100%; width: 100%; position: fixed; display: none; z-index: 1; top: 0; left: 0; background-color: rgb(0,0,0); background-color: rgba(0,0,0, 0.6);"></div>
+    <img id="loader-img" style="height: 100px; position: fixed; left: 50%; top: 50%; display: none; transform: translate(-50%,-50%);" src="{% static '/destinations/spin.svg' %}">
     <div class="col-lg-6 mx-auto">
         <div class="d-grid gap-3 d-flex justify-content-center mb-4">
             <button type="button" data-bs-toggle="modal" data-bs-target="#popUp" id="customizeBtn" class="homeBtn btn btn-outline-dark btn-lg px-2">Customize</button>
             <button type="button" data-bs-toggle="modal" data-bs-target="#popUp" id="customizeBtnMobile" class="homeBtn btn btn-outline-dark btn-lg px-2"><i class="bi bi-sliders2-vertical"></i></button>
-            <a type="button" href="{% url 'explore' %}" class="homeBtn btn btn-dark btn-lg px-4" id="exploreBtn">Explore</a>
-            <a type="button" href="{% url 'explore' %}" class="homeBtn btn btn-dark btn-lg px-4" id="exploreBtnMobile"><i class="bi bi-send"></i></a>
+            <a type="button" href="{% url 'explore' %}" onclick="return exploreLoader()" class="homeBtn btn btn-dark btn-lg px-4" id="exploreBtn">Explore</a>
+            <a type="button" href="{% url 'explore' %}" onclick="return exploreLoader()" class="homeBtn btn btn-dark btn-lg px-4" id="exploreBtnMobile"><i class="bi bi-send"></i></a>
         </div>
         <div id="popUp" class="modal modal-xl modal-fullscreen-sm-down" tabindex="-1"
             aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -138,7 +160,7 @@
                                     <input type="text" name="countryList" id="countryList" disabled style="width: 85%;">
                                 </div>
                             </div>
-                            <input type="submit" class="btn btn-dark" value="Search">
+                            <input type="submit" onclick="return exploreLoader()" data-bs-dismiss="modal" class="btn btn-dark" value="Search">
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -184,6 +206,7 @@
         {% for destination in destinations %}
         <div class="coldes"></div>
         <div class="coldes dest-image anime1" onclick="viewDest('{{ destination.destination_name|safe }}')" style="cursor: pointer; background-image:url('{{ destination.destination_imageURL }}')">
+            <!-- <a href="{% url 'destView' destination_name=destination.destination_name %}"><div class="coldes dest-image anime1" style="background-image:url('{{ destination.destination_imageURL }}')"></div></a> -->
             <div class="center-img-text">
                 <p>{{ destination.destination_name }}, {{ destination.destination_country }}</p>
             </div>

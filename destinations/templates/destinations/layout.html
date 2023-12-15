@@ -3,8 +3,8 @@
 <html lang="en" class="h-100">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="initial-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="">
   <title>{% block title %}{% endblock %}</title>
 
@@ -18,8 +18,8 @@
   <!-- Custom styles for this template -->
   <link href="{% static 'destinations/cover.css' %}" rel="stylesheet">
   <link rel="apple-touch-icon" sizes="180x180" href="{% static 'destinations/apple-touch-icon.png' %}">
-  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'destinations/favicon-32x32.png' %}">
-  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'destinations/favicon-16x16.png' %}">
+  <link rel="icon" sizes="32x32" href="{% static 'destinations/favicon-32x32.png' %}">
+  <link rel="icon" sizes="16x16" href="{% static 'destinations/favicon-16x16.png' %}">
   <link rel="manifest" href="{% static 'destinations/site.webmanifest' %}">
 
 </head>
@@ -51,7 +51,7 @@
             {% if user.is_authenticated %}
             <li class="nav-link px-3 link-dark"><span style="border-radius: 0;" class="badge text-bg-dark">{{ user.username }}</span></li>
             {% endif %}
-            <li class="nav-link px-3 link-dark"><a href="{% url 'homenew' %}">Home</a></li>
+            <li class="nav-link px-3 link-dark"><a href="{% url 'home' %}">Home</a></li>
             <li class="nav-link px-3 link-dark"><a href="{% url 'about' %}">About</a></li>
             <li class="nav-link px-3 link-dark"><a href="{% url 'beta' %}">Beta<sup>^</sup></a></li>
             <li class="nav-link px-3 link-dark"><a href="{% url 'contact' %}">Contact</a></li>
@@ -82,20 +82,20 @@
           <div class="col">
             <h5 class="foot-head pt-2">Destinations</h5>
             <ul class="nav flex-column">
-              <li class="nav-item mb-2 foot-nav"><a onclick="viewDest('Machu Picchu')" href="#" class="nav-link p-0 text-muted">Machu Picchu</a></li>
-              <li class="nav-item mb-2 foot-nav"><a onclick="viewDest('Siem Reap')" href="#" class="nav-link p-0 text-muted">Siem Reap</a></li>
-              <li class="nav-item mb-2 foot-nav"><a onclick="viewDest('Luang Prabang')" href="#" class="nav-link p-0 text-muted">Luang Prabang</a></li>
-              <li class="nav-item mb-2 foot-nav"><a onclick="viewDest('Ubud')" href="#" class="nav-link p-0 text-muted">Ubud</a></li>
+              <li class="nav-item mb-2 foot-nav"><a href="{% url 'destView' destination_name='Machu Picchu' %}" class="nav-link p-0 text-muted">Machu Picchu</a></li>
+              <li class="nav-item mb-2 foot-nav"><a href="{% url 'destView' destination_name='Sognefjord' %}" class="nav-link p-0 text-muted">Sognefjord</a></li>
+              <li class="nav-item mb-2 foot-nav"><a href="{% url 'destView' destination_name='Luang Prabang' %}" href="#" class="nav-link p-0 text-muted">Luang Prabang</a></li>
+              <li class="nav-item mb-2 foot-nav"><a href="{% url 'destView' destination_name='Bhutan' %}" href="#" class="nav-link p-0 text-muted">Bhutan</a></li>
             </ul>
           </div>
 
           <div class="col">
             <h5 class="foot-head pt-2">Adventure</h5>
             <ul class="nav flex-column">
-              <li class="nav-item mb-2 foot-nav"><a onclick="viewDest('Granada')" href="#" class="nav-link p-0 text-muted">Granada</a></li>
-              <li class="nav-item mb-2 foot-nav"><a onclick="viewDest('Navarra')" href="#" class="nav-link p-0 text-muted">Navarra</a></li>
-              <li class="nav-item mb-2 foot-nav"><a onclick="viewDest('Costa Brava')" href="#" class="nav-link p-0 text-muted">Costa Brava</a></li>
-              <li class="nav-item mb-2 foot-nav"><a onclick="viewDest('Sierra de Guadarrama')" href="#" class="nav-link p-0 text-muted">Sierra de Guadarrama</a></li>
+              <li class="nav-item mb-2 foot-nav"><a href="{% url 'destView' destination_name='Chilkoot Trail' %}" class="nav-link p-0 text-muted">Chilkoot Trail</a></li>
+              <li class="nav-item mb-2 foot-nav"><a href="{% url 'destView' destination_name='Queenstown' %}" class="nav-link p-0 text-muted">Queenstown</a></li>
+              <li class="nav-item mb-2 foot-nav"><a href="{% url 'destView' destination_name='Atacama Desert' %}" class="nav-link p-0 text-muted">Atacama Desert</a></li>
+              <li class="nav-item mb-2 foot-nav"><a href="{% url 'destView' destination_name='Lofoten Islands' %}" class="nav-link p-0 text-muted">Lofoten Islands</a></li>
             </ul>
           </div>
 
@@ -118,9 +118,9 @@
         </div>
       </footer>
     </div>
-
+    <div class="embedsocial-forms-iframe" data-ref="4404dc7b35e71d3a3fd5817bddafbd66ac1167cb" data-widget="true" data-height="auto"></div>
+    <script>(function(d, s, id){var js; if (d.getElementById(id)) {return;} js = d.createElement(s); js.id = id; js.src = "https://embedsocial.com/cdn/ef.js"; d.getElementsByTagName("head")[0].appendChild(js);}(document, "script", "EmbedSocialFormsScript"));</script>
   </div>
-
 </body>
 
 </html>

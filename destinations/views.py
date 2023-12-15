@@ -11,7 +11,7 @@ from django.db import IntegrityError
 from django.urls import reverse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
-from asgiref.sync import async_to_sync, sync_to_async
+from asgiref.sync import sync_to_async
 from django.core.mail import BadHeaderError, send_mail
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -25,12 +25,6 @@ from .models import *
 def home(request):
     destinations = Destination.objects.order_by('destination_searchID').reverse()[:14]
     return render(request, "destinations/home.html", {
-        "destinations" : destinations
-    })
-    
-def homenew(request):
-    destinations = Destination.objects.order_by('destination_searchID').reverse()[:14]
-    return render(request, "destinations/homenew.html", {
         "destinations" : destinations
     })
 
@@ -102,7 +96,7 @@ def search(request):
     })
 
 @require_POST
-def searchnew(request):
+def search(request):
     searchList = []
 
     searchVal1 = request.POST.get('adventure')
@@ -183,7 +177,7 @@ def searchnew(request):
     # Create a list of tasks to save destinations and fetch images
     destList = saveDest(parsedCompletion)
     
-    return render(request, "destinations/searchnew.html", {
+    return render(request, "destinations/search.html", {
         "searchGroup" : searchGroup,
         "destList" : destList
     })
@@ -203,7 +197,7 @@ def searchSave(request):
         print(e)
     return searchGroup
 
-def explorenew(request):
+def explore(request):
     searchGroup = searchSave(request)
     openai.api_key = settings.OPENAI_API_KEY
     completion = openai.ChatCompletion.create(
@@ -221,28 +215,12 @@ def explorenew(request):
     # Create a list of tasks to save destinations and fetch images
     destList = saveDest(parsedCompletion)
     
-    return render(request, "destinations/searchnew.html", {
+    return render(request, "destinations/search.html", {
         "searchGroup" : searchGroup,
         "destList" : destList
     })
 
-def explore(request):
-    if not request.user.is_authenticated:
-        search_user = None
-    else:
-        search_user = request.user
-    if search_user == None:
-        searchGroup = Search(search_theme="", search_destination="", search_custom_query="")
-    else:
-        searchGroup = Search(search_theme="", search_destination="", search_custom_query="", search_user=search_user)
-    searchGroup.save()
-    message = "Please allow a minute for AI to render The Best Destinations.."
-    return render(request, "destinations/search.html", {
-        "searchGroup" : searchGroup,
-        "message": message
-    })
-
-async def destSearch(request, id):
+async def destSearch1(request, id):
     searchItem = await get_search_item(id)
     searchList = [searchItem.search_theme, searchItem.search_destination, searchItem.search_custom_query]
     openai.api_key = settings.OPENAI_API_KEY
@@ -271,7 +249,86 @@ async def destSearch(request, id):
     parsedCompletion["destination_searchID"] = id
     print(parsedCompletion)
     # Create a list of tasks to save destinations and fetch images
-    await saveDest(parsedCompletion)
+    await saveDest1(parsedCompletion)
+        
+    return JsonResponse({"response":parsedCompletion}, status=200)
+
+def destSearch(request, id):
+    searchItem = Search.objects.get(pk=id)
+    searchList = [searchItem.search_theme, searchItem.search_destination, searchItem.search_custom_query]
+    openai.api_key = settings.OPENAI_API_KEY
+    if len(searchList) != 0:
+        temp_expr = (str(item) for item in searchList)
+        separator = ', '
+        searchMessage = separator.join(temp_expr)
+        completion = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "You are a helpful travel assistant, who will search the internet for 5 holiday destinations that are less crowded and make sure that the same destination is not repeated every time a similar search is made. The response should be in JSON with array called 'destinations' and fields with headers 'destination_name', 'destination_country' and 'destination_information. The field destination_name not to contain country name, it should either be a city, state or area."},
+                {"role": "user", "content": ("Please provide destinations ideal for " + searchMessage)}
+                ]
+            )
+    else:
+        completion = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "You are a helpful travel assistant, who will search the internet for 5 holiday destinations that are less crowded and make sure that the same destination is not repeated every time a similar search is made. The response should be in JSON with array called 'destinations' and fields with headers 'destination_name', 'destination_country' and 'destination_information. The field destination_name not to contain country name, it should either be a city, state or area."},
+                {"role": "user", "content": "Please provide 5 random destinations which are not crowded"}
+                ]
+            )
+    # parse completion:
+    parsedCompletion = json.loads(completion['choices'][0]['message']['content'])
+    parsedCompletion["destination_searchID"] = id
+    print(parsedCompletion)
+    # Create a list of tasks to save destinations and fetch images
+    try:
+        destList=[]
+        for i in range(len(parsedCompletion["destinations"])):
+            destination_name=parsedCompletion["destinations"][i]["destination_name"]
+            if "," in destination_name:
+                destination_name_split = destination_name.split(", ")
+                destination_name = destination_name_split[0]
+            if "'" in destination_name:
+                destination_name = destination_name.replace("'","")
+            destination_country=parsedCompletion["destinations"][i]["destination_country"]
+            destination_info=parsedCompletion["destinations"][i]["destination_information"]
+            destination_searchID=parsedCompletion["destination_searchID"]
+            destWithCntry = destination_name+", "+destination_country
+            parsedData = {"destination_name":destination_name,"destination_country":destination_country,"destination_info":destination_info,"destination_searchID":destination_searchID}
+            try:
+                image_urls = imageSearch(destWithCntry)
+                parsedData["destination_image_urls"] = image_urls
+                print ("image urls saved successfully in parsedData")
+            except Exception as e:
+                print(f"{e} not processed parsing images data")
+            
+            destination_name = parsedData["destination_name"]
+            destination_country = parsedData["destination_country"]
+            destination_info = parsedData["destination_info"]
+            destination_searchID = parsedData["destination_searchID"]
+            destination_imageURL = parsedData["destination_image_urls"][0]
+            destination_imageURL_2 = parsedData["destination_image_urls"][1]
+            destination_imageURL_3 = parsedData["destination_image_urls"][2]
+            destination_imageURL_4 = parsedData["destination_image_urls"][3]
+            destination_imageURL_5 = parsedData["destination_image_urls"][4]
+            destination_imageURL_6 = parsedData["destination_image_urls"][5]
+            destAdd = Destination(
+                destination_name=destination_name,
+                destination_country=destination_country,
+                destination_info=destination_info,
+                destination_searchID=destination_searchID,
+                destination_imageURL=destination_imageURL,
+                destination_imageURL_2=destination_imageURL_2,
+                destination_imageURL_3=destination_imageURL_3,
+                destination_imageURL_4=destination_imageURL_4,
+                destination_imageURL_5=destination_imageURL_5,
+                destination_imageURL_6=destination_imageURL_6
+                )
+            destAdd.save()
+            print(f"{destination_name}, {destination_country} destination is added")
+            destList.append(destAdd)
+    except Exception as e:
+        print(f"{e} not processed splitting destinations data")
         
     return JsonResponse({"response":parsedCompletion}, status=200)
 
@@ -306,47 +363,33 @@ def save_dest_item(parsedData):
     print(f"{destination_name}, {destination_country} destination is added")
     return destAdd
 
-
-# def destSearch(request, id):
-#     print(id)
-#     print("reached here")
-#     parsedCompletion = {
-#         'destinations': [
-#             {
-#                 'destination_name': 'Boracay',
-#                 'destination_country': 'Philippines',
-#                 'destination_information': 'Boracay is a small island in the Philippines known for its white sand beaches, crystal clear waters, and vibrant nightlife. It offers a perfect beach getaway with a range of water sports and activities, as well as plenty of relaxation options.'
-#             },
-#             {
-#                 'destination_name': 'Zanzibar',
-#                 'destination_country': 'Tanzania',
-#                 'destination_information': 'Zanzibar is an archipelago off the coast of Tanzania in East Africa. It is famous for its pristine beaches, turquoise waters, and rich cultural heritage. The island provides a blend of history, culture, and relaxation, making it an ideal beach getaway destination.'
-#             },
-#             # Add more destinations here
-#         ]
-#     }
-
-#     return JsonResponse({"response":parsedCompletion}, status=200)
-    
-# def imageSearch(request, destination_name):
-#     try:
-#         # Make a request to Google Places API using your API key
-#         google_api_key = settings.YOUR_GOOGLE_API_KEY
-#         place_search_url = f"https://maps.googleapis.com/maps/api/place/findplacefromtext/json?key={google_api_key}&input={destination_name}&inputtype=textquery"
-
-#         place_images_response = requests.get(place_search_url)
-
-#         if place_images_response.status_code == 200:
-#             images_data = place_images_response.json()
-#             print(images_data)
-#             # Process the images_data and return relevant data to the frontend
-#             # You can send the image URLs and other information in the response
-#             return JsonResponse(images_data)
-#         else:
-#             return JsonResponse({"error": "Google Places API request failed"}, status=500)
-
-#     except Exception as e:
-#         return JsonResponse({"error": str(e)}, status=500)
+@sync_to_async
+def save_dest_item1(parsedData):
+    destination_name = parsedData["destination_name"]
+    destination_country = parsedData["destination_country"]
+    destination_info = parsedData["destination_info"]
+    destination_searchID = parsedData["destination_searchID"]
+    destination_imageURL = parsedData["destination_image_urls"][0]
+    destination_imageURL_2 = parsedData["destination_image_urls"][1]
+    destination_imageURL_3 = parsedData["destination_image_urls"][2]
+    destination_imageURL_4 = parsedData["destination_image_urls"][3]
+    destination_imageURL_5 = parsedData["destination_image_urls"][4]
+    destination_imageURL_6 = parsedData["destination_image_urls"][5]
+    destAdd = Destination(
+        destination_name=destination_name,
+        destination_country=destination_country,
+        destination_info=destination_info,
+        destination_searchID=destination_searchID,
+        destination_imageURL=destination_imageURL,
+        destination_imageURL_2=destination_imageURL_2,
+        destination_imageURL_3=destination_imageURL_3,
+        destination_imageURL_4=destination_imageURL_4,
+        destination_imageURL_5=destination_imageURL_5,
+        destination_imageURL_6=destination_imageURL_6
+        )
+    destAdd.save()
+    print(f"{destination_name}, {destination_country} destination is added")
+    return destAdd
 
 def saveDest(parsedCompletion):
     try:
@@ -375,6 +418,35 @@ def saveDest(parsedCompletion):
     except Exception as e:
         print(f"{e} not processed splitting destinations data")
         return JsonResponse({"error": str(e)}, status=500)
+
+async def saveDest1(parsedCompletion):
+    try:
+        destList=[]
+        for i in range(len(parsedCompletion["destinations"])):
+            destination_name=parsedCompletion["destinations"][i]["destination_name"]
+            if "," in destination_name:
+                destination_name_split = destination_name.split(", ")
+                destination_name = destination_name_split[0]
+            if "'" in destination_name:
+                destination_name = destination_name.replace("'","")
+            destination_country=parsedCompletion["destinations"][i]["destination_country"]
+            destination_info=parsedCompletion["destinations"][i]["destination_information"]
+            destination_searchID=parsedCompletion["destination_searchID"]
+            destWithCntry = destination_name+", "+destination_country
+            parsedData = {"destination_name":destination_name,"destination_country":destination_country,"destination_info":destination_info,"destination_searchID":destination_searchID}
+            try:
+                image_urls = await imageSearch(destWithCntry)
+                parsedData["destination_image_urls"] = image_urls
+                print ("image urls saved successfully in parsedData")
+            except Exception as e:
+                print(f"{e} not processed parsing images data")
+            destItem = await save_dest_item1(parsedData)
+            destList.append(destItem)
+        return destList
+    except Exception as e:
+        print(f"{e} not processed splitting destinations data")
+        return JsonResponse({"error": str(e)}, status=500)
+
 
 def imageSearch(destination_name):
     try:
@@ -469,13 +541,11 @@ async def singleImageSearch(request, destination_name):
 
         if unsplash_response.status_code == 200:
             images_data = unsplash_response.json()
-            print(images_data)
             if len(images_data["results"]) != 0:
                 # Get only the image url and store in destination_imageURL
                 image_URL = images_data["results"][0]["urls"]["regular"]
             else:
                 image_URL = "https://images.unsplash.com/photo-1678393813297-c8ee5e1c5327"
-            print(image_URL)                
             # You can send the image URLs and other information in the response
             return JsonResponse({"response":image_URL},status=200)
         else:
@@ -483,7 +553,6 @@ async def singleImageSearch(request, destination_name):
 
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
-
 
 require_POST
 def register(request):
@@ -591,17 +660,3 @@ def unlike(request, id):
     else:
         liked = False
     return JsonResponse({"likes": likes, "liked": liked}, status=201)
-
-# SAVE SEARCH PARAMETERS
-
-# PASS SEARCH PARAMETERS TO OPEN API
-
-# PARSE RESPONSE
-
-# SPLIT DESTINATIONS
-
-# SEARCH IMAGES FOR DESTINATIONS
-
-# STORE DESTINATIONS AND IMAGES AND SAVE IN DB
-
-# RETURN DESTINATION IDS' GROUP TO SEARCH.HTML
