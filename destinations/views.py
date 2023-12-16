@@ -290,6 +290,8 @@ def destSearch(request, id):
                 destination_name = destination_name_split[0]
             if "'" in destination_name:
                 destination_name = destination_name.replace("'","")
+            if "/" in destination_name:
+                destination_name = destination_name.replace("/"," ")
             destination_country=parsedCompletion["destinations"][i]["destination_country"]
             destination_info=parsedCompletion["destinations"][i]["destination_information"]
             destination_searchID=parsedCompletion["destination_searchID"]
@@ -401,6 +403,8 @@ def saveDest(parsedCompletion):
                 destination_name = destination_name_split[0]
             if "'" in destination_name:
                 destination_name = destination_name.replace("'","")
+            if "/" in destination_name:
+                destination_name = destination_name.replace("/"," ")
             destination_country=parsedCompletion["destinations"][i]["destination_country"]
             destination_info=parsedCompletion["destinations"][i]["destination_information"]
             destination_searchID=parsedCompletion["destination_searchID"]
